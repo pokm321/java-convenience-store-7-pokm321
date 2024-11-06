@@ -2,6 +2,7 @@ package store.controller;
 
 import store.domain.Products;
 import store.domain.Promotions;
+import store.domain.input.Order;
 import store.service.MdReader;
 import store.view.InputView;
 import store.view.OutputView;
@@ -27,7 +28,6 @@ public class StoreController {
         Promotions promotions = reader.addItems(new Promotions());
 
         outputView.printStock(products, promotions);
-        inputView.readItem();
-        
+        Order order = new Order(inputView.readItem());
     }
 }
