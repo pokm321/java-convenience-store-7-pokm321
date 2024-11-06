@@ -17,18 +17,6 @@ public class MdReader {
         }
     }
 
-    public void readLines() {
-        try {
-            String line;
-            while ((line = readLine()) != null) {
-                System.out.println(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String readLine(){
         try {
             return reader.readLine();

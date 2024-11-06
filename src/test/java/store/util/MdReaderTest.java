@@ -24,10 +24,4 @@ public class MdReaderTest {
         }
     }
 
-    @Test
-    void 파일_전체_읽기_기능_테스트() {
-        MdReader reader = new MdReader("src/main/resources/products.md");
-
-        reader.readLines();
-    }
 }
