@@ -12,12 +12,12 @@ public class Product {
     private final String promotion;
 
     public Product(String line) {
-        String[] fields = getFields(line);
+        List<String> fields = getFields(line);
 
-        this.name = fields[0];
-        this.price = Integer.parseInt(fields[1]);
-        this.quantity = Integer.parseInt(fields[2]);
-        this.promotion = fields[3];
+        this.name = fields.get(0);
+        this.price = Integer.parseInt(fields.get(1));
+        this.quantity = Integer.parseInt(fields.get(2));
+        this.promotion = fields.get(3);
     }
 
     public String getName() {
@@ -40,7 +40,7 @@ public class Product {
         return promotion;
     }
 
-    private String[] getFields(String line) {
-        return line.split(DELIMITER);
+    private List<String> getFields(String line) {
+        return List.of(line.split(DELIMITER));
     }
 }
