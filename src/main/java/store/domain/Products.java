@@ -12,6 +12,10 @@ public class Products {
         return listOfProducts;
     }
 
+    public void addProduct(String line) {
+        listOfProducts.add(new Product(line));
+    }
+
     public void addProduct(String name, int price, int quantity, String promotion) {
         listOfProducts.add(new Product(name, price, quantity, promotion));
     }
