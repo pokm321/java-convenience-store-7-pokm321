@@ -1,6 +1,6 @@
 package store.domain;
 
-public enum MdErrorMessages {
+public enum MdErrors {
 
     MD_READ_FAIL("파일 읽기에 실패했습니다."),
     MD_EMPTY_ERROR("값이 비어있습니다."),
@@ -9,7 +9,7 @@ public enum MdErrorMessages {
 
     private final String message;
 
-    MdErrorMessages(String message) {
+    MdErrors(String message) {
         this.message = message;
     }
 

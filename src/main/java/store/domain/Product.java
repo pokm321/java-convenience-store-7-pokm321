@@ -57,19 +57,19 @@ public class Product {
 
     private void validateNotNull(String line) {
         if (line == null) {
-            throw new IllegalArgumentException(MdErrorMessages.MD_EMPTY_ERROR.getMessage());
+            throw new IllegalArgumentException(MdErrors.MD_EMPTY_ERROR.getMessage());
         }
     }
 
     private void validateNotEmpty(String line) {
         if (line.isBlank()) {
-            throw new IllegalArgumentException(MdErrorMessages.MD_EMPTY_ERROR.getMessage());
+            throw new IllegalArgumentException(MdErrors.MD_EMPTY_ERROR.getMessage());
         }
     }
 
     private void validateCount(List<String> fields) {
         if (fields.size() != FIELD_COUNT) {
-            throw new IllegalArgumentException(MdErrorMessages.MD_COUNT_ERROR.getMessage());
+            throw new IllegalArgumentException(MdErrors.MD_COUNT_ERROR.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class Product {
             Integer.parseInt(fields.get(1));
             Integer.parseInt(fields.get(2));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(MdErrorMessages.MD_INTEGER_ERROR.getMessage());
+            throw new IllegalArgumentException(MdErrors.MD_INTEGER_ERROR.getMessage());
         }
     }
 }

@@ -5,12 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import store.domain.MdData;
-import store.domain.MdErrorMessages;
+import store.domain.MdErrors;
 
 public class MdReader {
     BufferedReader reader;
 
-    public MdReader(String path){
+    public MdReader(String path) {
         try {
             reader = new BufferedReader(new FileReader(path));
         } catch (FileNotFoundException e) {
@@ -29,7 +29,7 @@ public class MdReader {
 
             reader.close();
         } catch (IOException e) {
-            throw new IllegalArgumentException(MdErrorMessages.MD_READ_FAIL.getMessage());
+            throw new IllegalArgumentException(MdErrors.MD_READ_FAIL.getMessage());
         }
 
         return data;
