@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Products {
+public class Products implements MdData<Product>{
 
     private List<Product> listOfProducts = new ArrayList<>();
 
@@ -12,7 +12,8 @@ public class Products {
         return listOfProducts;
     }
 
-    public void addProduct(String line) {
+    @Override
+    public void addItem(String line) {
         listOfProducts.add(new Product(line));
     }
 }

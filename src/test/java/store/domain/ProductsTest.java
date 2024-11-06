@@ -9,8 +9,8 @@ public class ProductsTest {
     @Test
     void 제품_추가_테스트() {
         Products products = new Products();
-        products.addProduct("콜라,1000,5,MD추천");
-        products.addProduct("사이다,2000,10,null");
+        products.addItem("콜라,1000,5,MD추천");
+        products.addItem("사이다,2000,10,null");
 
         assertThat(products.getAll().get(0).getPrice())
                 .isEqualTo(1000);

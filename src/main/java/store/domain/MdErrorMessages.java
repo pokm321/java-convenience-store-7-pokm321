@@ -1,4 +1,4 @@
-package store.util;
+package store.domain;
 
 public enum MdErrorMessages {
 
