@@ -9,6 +9,10 @@ public class OutputView {
     private static final String NO_PROMOTION_MD = "null";
     private static final int NO_QUANTITY_MD = 0;
 
+    public void printError(String message) {
+        System.out.println(message);
+    }
+
     public void printStock(Products products, Promotions promotions) {
         System.out.printf(Outputs.WELCOME.getMessage());
 

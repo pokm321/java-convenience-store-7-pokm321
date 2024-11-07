@@ -1,7 +1,6 @@
 package store.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 import store.domain.MdPaths;
@@ -10,16 +9,21 @@ import store.domain.input.Orders;
 
 public class QuantityCheckerTest {
 
+    Products products = new Products(MdPaths.PRODUCTS.getPath());
+
     @Test
     void 재고_확인_테스트() {
-        Products products = new Products(MdPaths.PRODUCTS.getPath());
-
-        Orders orders = new Orders("[초코바-10],[사이다-16]");
+        Orders orders = new Orders("[초코바-10],[사이다-15]");
         QuantityChecker checker = new QuantityChecker(products, orders);
-        assertFalse(checker.isEnoughQuantity());
+        checker.checkEnoughQuantity();
+    }
 
-        orders = new Orders("[초코바-10],[사이다-15]");
-        checker = new QuantityChecker(products, orders);
-        assertTrue(checker.isEnoughQuantity());
+    @Test
+    void 재고_없음_예외_테스트() {
+        assertThatThrownBy(() -> {
+            Orders orders = new Orders("[초코바-10],[사이다-16]");
+            QuantityChecker checker = new QuantityChecker(products, orders);
+            checker.checkEnoughQuantity();
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }

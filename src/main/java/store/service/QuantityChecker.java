@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import store.domain.Product;
 import store.domain.Products;
+import store.domain.input.InputErrors;
 import store.domain.input.Order;
 import store.domain.input.Orders;
 
@@ -19,7 +20,13 @@ public class QuantityChecker {
         this.orders = orders;
     }
 
-    public boolean isEnoughQuantity() {
+    public void checkEnoughQuantity() {
+        if (!isEnoughQuantity()) {
+            throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
+        }
+    }
+
+    private boolean isEnoughQuantity() {
         Map<String, Integer> orders_pairs = getPairs(orders.getAll(), Order::getName, Order::getQuantity);
         Map<String, Integer> products_pairs = getPairs(products.getAll(), Product::getName, Product::getQuantity);
 
