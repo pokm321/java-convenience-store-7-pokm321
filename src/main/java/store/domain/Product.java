@@ -1,6 +1,7 @@
 package store.domain;
 
 import java.util.List;
+import store.util.md.MdErrors;
 
 public class Product {
 

@@ -3,6 +3,7 @@ package store.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import store.util.md.MdPaths;
 
 public class PromotionsTest {
 

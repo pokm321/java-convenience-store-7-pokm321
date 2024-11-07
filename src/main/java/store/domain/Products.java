@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import store.domain.input.InputErrors;
+import store.util.md.MdErrors;
 
 public class Products {
 
@@ -20,6 +22,16 @@ public class Products {
 
     public List<Product> getAll() {
         return listOfProducts;
+    }
+
+    public List<Product> getProductsByName(String name) {
+        return listOfProducts.stream().filter(product -> product.getName().equals(name)).toList();
+    }
+
+    public int getPriceByName(String name) {
+        return listOfProducts.stream().filter(product -> product.getName().equals(name)).findAny()
+                .orElseThrow(() -> new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage()))
+                .getPrice();
     }
 
     private void addItems(BufferedReader reader) throws IOException {

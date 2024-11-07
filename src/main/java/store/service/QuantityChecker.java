@@ -12,7 +12,7 @@ import store.domain.input.Orders;
 
 public class QuantityChecker {
 
-    Products products;
+    private final Products products;
 
     public QuantityChecker(Products products) {
         this.products = products;

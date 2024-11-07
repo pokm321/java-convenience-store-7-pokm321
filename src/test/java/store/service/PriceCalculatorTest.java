@@ -3,9 +3,9 @@ package store.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import store.domain.MdPaths;
 import store.domain.Products;
 import store.domain.input.Orders;
+import store.util.md.MdPaths;
 
 public class PriceCalculatorTest {
 

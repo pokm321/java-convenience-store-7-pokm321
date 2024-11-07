@@ -1,11 +1,12 @@
 package store.controller;
 
-import store.domain.MdPaths;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PriceCalculator;
 import store.service.QuantityChecker;
+import store.service.StockManager;
+import store.util.md.MdPaths;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -35,6 +36,10 @@ public class StoreController {
         PriceCalculator calculator = new PriceCalculator(products);
         System.out.println(calculator.getRawTotalPrice(orders));
 
+        StockManager manager = new StockManager(products);
+        manager.deductOrders(orders, true);
+
+        outputView.printStock(products, promotions);
     }
 
     private void tryUntilSuccess(Runnable function) {
