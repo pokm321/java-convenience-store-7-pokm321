@@ -19,7 +19,7 @@ public class StockManagerTest {
 
     @Test
     void 여러_주문_기능_테스트() {
-        Orders orders = new Orders("[초코바-3],[감자칩-3],[초코바-3]");
+        Orders orders = new Orders("[초코바-3],[감자칩-3],[초코바-3]", products);
         assertThat(products.getProductsByName("초코바").stream()
                 .mapToInt(Product::getQuantity).sum()).isEqualTo(10);
 

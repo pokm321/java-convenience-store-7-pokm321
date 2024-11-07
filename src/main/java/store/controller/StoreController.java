@@ -5,9 +5,7 @@ import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PriceCalculator;
 import store.service.PromotionTimer;
-import store.service.QuantityChecker;
 import store.service.StockManager;
-import store.util.md.MdPaths;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -15,24 +13,20 @@ public class StoreController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final Products products;
+    private final Promotions promotions;
     private Orders orders;
-    private QuantityChecker checker;
 
-    public StoreController(InputView inputView, OutputView outputView) {
+    public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.products = products;
+        this.promotions = promotions;
     }
 
     public void run() {
-        Products products = new Products(MdPaths.PRODUCTS.getPath());
-        Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
-
         outputView.printStock(products, promotions);
-        tryUntilSuccess(() -> {
-            orders = new Orders(inputView.readItem());
-            checker = new QuantityChecker(products);
-            checker.checkEnoughQuantity(orders);
-        });
+        tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
         PriceCalculator calculator = new PriceCalculator(products);
         PromotionTimer timer = new PromotionTimer(products, promotions);

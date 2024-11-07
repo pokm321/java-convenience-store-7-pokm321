@@ -13,7 +13,7 @@ public class PriceCalculatorTest {
 
     @Test
     void 가격_계산_테스트() {
-        Orders orders = new Orders("[초코바-10],[사이다-9]");
+        Orders orders = new Orders("[초코바-10],[사이다-9]", products);
         PriceCalculator calculator = new PriceCalculator(products);
         assertThat(calculator.getRawTotalPrice(orders)).isEqualTo(21000L);
     }
