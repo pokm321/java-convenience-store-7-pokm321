@@ -18,7 +18,7 @@ public class MdReader {
         }
     }
 
-    public <T extends MdData<?>> T addItems(T data) {
+    public <T extends MdData<?>> T addItemsTo(T data) {
         String line;
 
         try {

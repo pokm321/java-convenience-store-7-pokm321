@@ -22,10 +22,10 @@ public class StoreController {
 
     public void run() {
         MdReader reader = new MdReader(productsPath);
-        Products products = reader.addItems(new Products());
+        Products products = reader.addItemsTo(new Products());
 
         reader = new MdReader(promotionsPath);
-        Promotions promotions = reader.addItems(new Promotions());
+        Promotions promotions = reader.addItemsTo(new Promotions());
 
         outputView.printStock(products, promotions);
         Order order = new Order(inputView.readItem());
