@@ -48,7 +48,7 @@ public class Order {
 
     private void validateNotNull(String rawOrder) {
         if (rawOrder == null) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(InputErrors.OTHERS.getMessage());
         }
     }
 
