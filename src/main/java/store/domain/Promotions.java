@@ -9,7 +9,7 @@ import store.util.md.MdErrors;
 
 public class Promotions {
 
-    private List<Promotion> listOfPromotions = new ArrayList<>();
+    private final List<Promotion> listOfPromotions = new ArrayList<>();
 
     public Promotions(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -21,6 +21,11 @@ public class Promotions {
 
     public List<Promotion> getAll() {
         return listOfPromotions;
+    }
+
+    public Promotion getPromotionByName(String name) {
+        return listOfPromotions.stream().filter(promotion -> promotion.getName().equals(name)).findAny()
+                .orElseThrow(() -> new IllegalArgumentException(MdErrors.MD_READ_FAIL.getMessage()));
     }
 
     private void addItems(BufferedReader reader) throws IOException {

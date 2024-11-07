@@ -10,7 +10,7 @@ import store.util.md.MdErrors;
 
 public class Products {
 
-    private List<Product> listOfProducts = new ArrayList<>();
+    private final List<Product> listOfProducts = new ArrayList<>();
 
     public Products(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {

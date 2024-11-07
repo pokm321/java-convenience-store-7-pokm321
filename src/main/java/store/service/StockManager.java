@@ -1,5 +1,6 @@
 package store.service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import store.domain.Product;
@@ -11,14 +12,16 @@ import store.util.md.MdKeywords;
 public class StockManager {
 
     private final Products products;
+    private final PromotionTimer timer;
 
-    public StockManager(Products products) {
+    public StockManager(Products products, PromotionTimer timer) {
         this.products = products;
+        this.timer = timer;
     }
 
-    public void deductOrders(Orders orders, boolean isPromotion) {
+    public void deductOrders(Orders orders, LocalDateTime time) {
         for (Order order : orders.getAll()) {
-            deductOrder(order, isPromotion);
+            deductOrder(order, timer.isPromotion(order, time));
         }
     }
 
@@ -35,10 +38,10 @@ public class StockManager {
     }
 
     private List<Product> sortByPromotion(List<Product> products, boolean isPromotion) {
-        if (isPromotion) { // 프로모션 기간중엔 프로모션 재고가 앞에 오도록
+        if (isPromotion) {
             return products.stream().sorted(Comparator.comparing(product ->
                     product.getPromotion().equals(MdKeywords.NULL.getValue())
-            )).toList();
+            )).toList(); // 프로모션 기간중엔 프로모션 재고가 앞에 오도록
         }
 
         return products.stream().sorted(Comparator.comparing(product ->

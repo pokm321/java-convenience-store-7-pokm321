@@ -4,6 +4,7 @@ import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PriceCalculator;
+import store.service.PromotionTimer;
 import store.service.QuantityChecker;
 import store.service.StockManager;
 import store.util.md.MdPaths;
@@ -34,11 +35,12 @@ public class StoreController {
         });
 
         PriceCalculator calculator = new PriceCalculator(products);
+        PromotionTimer timer = new PromotionTimer(products, promotions);
+        StockManager manager = new StockManager(products, timer);
+
         System.out.println(calculator.getRawTotalPrice(orders));
 
-        StockManager manager = new StockManager(products);
-        manager.deductOrders(orders, true);
-
+        manager.deductOrders(orders, timer.getNow());
         outputView.printStock(products, promotions);
     }
 
