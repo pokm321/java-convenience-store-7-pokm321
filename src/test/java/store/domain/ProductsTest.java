@@ -5,16 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 public class ProductsTest {
+    private static final String productsPath = "src/main/resources/products.md";
 
     @Test
     void 제품_추가_테스트() {
-        Products products = new Products();
-        products.addItem("콜라,1000,5,MD추천");
-        products.addItem("사이다,2000,10,null");
+        Products products = new Products(MdPaths.PRODUCTS.getPath());
 
-        assertThat(products.getAll().get(0).getPrice())
-                .isEqualTo(1000);
+        assertThat(products.getAll().get(0).getName())
+                .isEqualTo("콜라");
         assertThat(products.getAll().get(1).getPromotion())
                 .isEqualTo("null");
+        assertThat(products.getAll().get(4).getName())
+                .isEqualTo("오렌지주스");
     }
 }
