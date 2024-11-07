@@ -28,13 +28,13 @@ public class StoreController {
         outputView.printStock(products, promotions);
         tryUntilSuccess(() -> {
             orders = new Orders(inputView.readItem());
-            checker = new QuantityChecker(products, orders);
-            checker.checkEnoughQuantity();
+            checker = new QuantityChecker(products);
+            checker.checkEnoughQuantity(orders);
         });
 
-        PriceCalculator calculator = new PriceCalculator(products, orders);
-        System.out.println(calculator.getRawTotalPrice());
-        
+        PriceCalculator calculator = new PriceCalculator(products);
+        System.out.println(calculator.getRawTotalPrice(orders));
+
     }
 
     private void tryUntilSuccess(Runnable function) {

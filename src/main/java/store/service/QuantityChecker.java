@@ -13,20 +13,18 @@ import store.domain.input.Orders;
 public class QuantityChecker {
 
     Products products;
-    Orders orders;
 
-    public QuantityChecker(Products products, Orders orders) {
+    public QuantityChecker(Products products) {
         this.products = products;
-        this.orders = orders;
     }
 
-    public void checkEnoughQuantity() {
-        if (!isEnoughQuantity()) {
+    public void checkEnoughQuantity(Orders orders) {
+        if (!isEnoughQuantity(orders)) {
             throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
         }
     }
 
-    private boolean isEnoughQuantity() {
+    private boolean isEnoughQuantity(Orders orders) {
         Map<String, Integer> orders_pairs = getPairs(orders.getAll(), Order::getName, Order::getQuantity);
         Map<String, Integer> products_pairs = getPairs(products.getAll(), Product::getName, Product::getQuantity);
 

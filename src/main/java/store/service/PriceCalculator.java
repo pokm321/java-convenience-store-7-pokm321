@@ -6,15 +6,13 @@ import store.domain.input.Orders;
 
 public class PriceCalculator {
 
-    Products products;
-    Orders orders;
+    private final Products products;
 
-    public PriceCalculator(Products products, Orders orders) {
+    public PriceCalculator(Products products) {
         this.products = products;
-        this.orders = orders;
     }
 
-    public long getRawTotalPrice() {
+    public long getRawTotalPrice(Orders orders) {
         return orders.getAll().stream()
                 .mapToLong(order -> order.getQuantity() * getEachPrice(order.getName()))
                 .sum();
