@@ -3,7 +3,7 @@ package store.controller;
 import store.domain.MdPaths;
 import store.domain.Products;
 import store.domain.Promotions;
-import store.domain.input.Order;
+import store.domain.input.Orders;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -22,6 +22,8 @@ public class StoreController {
         Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
 
         outputView.printStock(products, promotions);
-        Order order = new Order(inputView.readItem());
+        Orders orders = new Orders(inputView.readItem());
+
+
     }
 }

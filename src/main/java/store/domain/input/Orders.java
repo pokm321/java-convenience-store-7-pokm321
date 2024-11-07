@@ -9,7 +9,7 @@ public class Orders {
 
     private List<Order> listOfOrders = new ArrayList<>();
 
-    Orders(String rawOrders) {
+    public Orders(String rawOrders) {
         validate(rawOrders);
 
         for (String rawOrder : rawOrders.split(COMMA)) {
