@@ -6,7 +6,8 @@ public enum Outputs {
     ITEM_INFO("- %s %,d원 "),
     QUANTITY("%,d개"),
     SPACE(" "),
-    NO_QUANTITY_OUTPUT("재고 없음");
+    NO_QUANTITY_OUTPUT("재고 없음"),
+    ADD_PROMOTED_PRODUCT("현재 %s은(는) %,d개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
 
     private final String message;
 

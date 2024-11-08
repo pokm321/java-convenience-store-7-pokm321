@@ -52,21 +52,21 @@ public class Orders {
     }
 
     private boolean isEnoughQuantity(Products products) {
-        Map<String, Integer> orders_pairs = getPairs(listOfOrders, Order::getName, Order::getQuantity);
-        Map<String, Integer> products_pairs = getPairs(products.getAll(), Product::getName, Product::getQuantity);
+        Map<String, Integer> ordersMerged = getMergedPairs(listOfOrders, Order::getName, Order::getQuantity);
+        Map<String, Integer> productsMerged = getMergedPairs(products.getAll(), Product::getName, Product::getQuantity);
 
-        return orders_pairs.keySet().stream()
-                .allMatch(orderName -> products_pairs.get(orderName) >= orders_pairs.get(orderName));
+        return ordersMerged.keySet().stream()
+                .allMatch(orderName -> productsMerged.get(orderName) >= ordersMerged.get(orderName));
     }
 
-    private <T> Map<String, Integer> getPairs(List<T> items, Function<T, String> getName,
-                                              Function<T, Integer> getQuantity) {
-        Map<String, Integer> name_quantity = new HashMap<>();
+    private <T> Map<String, Integer> getMergedPairs(List<T> items, Function<T, String> getName,
+                                                    Function<T, Integer> getQuantity) {
+        Map<String, Integer> nameQuantity = new HashMap<>();
         items.forEach(item ->
-                name_quantity.merge(getName.apply(item), getQuantity.apply(item), Integer::sum)
+                nameQuantity.merge(getName.apply(item), getQuantity.apply(item), Integer::sum)
         );
 
-        return name_quantity;
+        return nameQuantity;
     }
 
 }
