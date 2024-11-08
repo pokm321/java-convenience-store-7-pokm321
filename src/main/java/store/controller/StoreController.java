@@ -29,7 +29,7 @@ public class StoreController {
         outputView.printStock(products, promotions);
         tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
-        PriceCalculator calculator = new PriceCalculator(products);
+        PriceCalculator calculator = new PriceCalculator(products, promotions);
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
         StockManager manager = new StockManager(products, timer);
 

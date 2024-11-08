@@ -1,15 +1,18 @@
 package store.service;
 
 import store.domain.Products;
+import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 
 public class PriceCalculator {
 
     private final Products products;
+    private final Promotions promotions;
 
-    public PriceCalculator(Products products) {
+    public PriceCalculator(Products products, Promotions promotions) {
         this.products = products;
+        this.promotions = promotions;
     }
 
     public long getRawTotalPrice(Orders orders) {
@@ -18,9 +21,17 @@ public class PriceCalculator {
                 .sum();
     }
 
-    public long getPromotedTotalPrice(Orders orders, Promotions promotions, PromotionTimer timer) {
-
-        return 1L;
+    public long getPromotedTotalPrice(Orders orders, PromotionTimer timer) {
+        return orders.getAll().stream()
+                .mapToLong(order -> {
+                    int orderPrice = order.getQuantity() * products.getPriceByName(order.getName());
+                    if (timer.isPromotion(order)) {
+                        Promotion promotion = promotions.getPromotion(products.getPromotionName(order.getName()));
+                        orderPrice =
+                                orderPrice * promotion.getBuy() / (promotion.getBuy() + promotion.getGet());
+                    }
+                    return orderPrice;
+                }).sum();
     }
 
 }

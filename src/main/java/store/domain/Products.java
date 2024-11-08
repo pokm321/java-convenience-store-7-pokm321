@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.domain.input.InputErrors;
 import store.util.md.MdErrors;
+import store.util.md.MdKeywords;
 
 public class Products {
 
@@ -24,6 +25,17 @@ public class Products {
         return listOfProducts;
     }
 
+    public String getPromotionName(String name) {
+        List<Product> productsOnPromotion = getProductsByName(name).stream()
+                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+
+        if (productsOnPromotion.isEmpty()) {
+            return MdKeywords.NULL.getValue();
+        }
+
+        return productsOnPromotion.getFirst().getPromotion();
+    }
+
     public List<Product> getProductsByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).toList();
     }
@@ -33,6 +45,7 @@ public class Products {
                 .orElseThrow(() -> new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage()))
                 .getPrice();
     }
+
 
     private void addItems(BufferedReader reader) throws IOException {
         String line;

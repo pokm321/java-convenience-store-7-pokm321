@@ -23,8 +23,8 @@ public class Promotions {
         return listOfPromotions;
     }
 
-    public Promotion getPromotionByName(String name) {
-        return listOfPromotions.stream().filter(promotion -> promotion.getName().equals(name)).findAny()
+    public Promotion getPromotion(String promotionName) {
+        return listOfPromotions.stream().filter(promotion -> promotion.getName().equals(promotionName)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException(MdErrors.MD_READ_FAIL.getMessage()));
     }
 
