@@ -27,19 +27,28 @@ public class Products {
         return listOfProducts;
     }
 
-    public String getPromotionName(String name) {
-        List<Product> productsOnPromotion = getProductsByName(name).stream()
-                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+    public String getPromotionNameByName(String name) {
+        List<Product> promotedProducts = getPromotedProductsByName(name);
 
-        if (productsOnPromotion.isEmpty()) {
+        if (promotedProducts.isEmpty()) {
             return MdKeywords.NULL.getValue();
         }
 
-        return productsOnPromotion.getFirst().getPromotion();
+        return promotedProducts.getFirst().getPromotion();
     }
 
     public List<Product> getProductsByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).toList();
+    }
+
+    public List<Product> getNullProductsByName(String name) {
+        return listOfProducts.stream().filter(product -> product.getName().equals(name))
+                .filter(p -> p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+    }
+
+    public List<Product> getPromotedProductsByName(String name) {
+        return listOfProducts.stream().filter(product -> product.getName().equals(name))
+                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
     }
 
     public int getPriceByName(String name) {

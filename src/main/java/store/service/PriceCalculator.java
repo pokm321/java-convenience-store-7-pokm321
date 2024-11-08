@@ -25,8 +25,8 @@ public class PriceCalculator {
         return orders.getAll().stream()
                 .mapToLong(order -> {
                     int orderPrice = order.getQuantity() * products.getPriceByName(order.getName());
-                    if (timer.isPromotion(order)) {
-                        Promotion promotion = promotions.getPromotion(products.getPromotionName(order.getName()));
+                    if (timer.isPromotionPeriod(order)) {
+                        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
                         orderPrice =
                                 orderPrice * promotion.getBuy() / (promotion.getBuy() + promotion.getGet());
                     }

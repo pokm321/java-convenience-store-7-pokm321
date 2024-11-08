@@ -9,9 +9,11 @@ import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.util.md.MdPaths;
+import store.view.InputView;
 
 public class StockManagerTest {
 
+    InputView inputView = new InputView();
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
 
@@ -23,35 +25,17 @@ public class StockManagerTest {
 
         LocalDateTime fakeTime = LocalDateTime.parse("2024-05-05T23:59:59");
         PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
-        StockManager manager = new StockManager(products, promotions, timer);
+        StockManager manager = new StockManager(inputView, products, promotions, timer);
 
         manager.deductOrders(orders);
 
-        assertThat(products.getProductsByName("초코바").stream()
-                .filter(p -> p.getPromotion().equals("null")).toList()
-                .get(0).getQuantity()).isEqualTo(4);
+        assertThat(products.getNullProductsByName("초코바").getFirst().getQuantity()).isEqualTo(4);
 
-        assertThat(products.getProductsByName("초코바").stream()
-                .filter(p -> !p.getPromotion().equals("null")).toList()
-                .get(0).getQuantity()).isEqualTo(0);
+        assertThat(products.getPromotedProductsByName("초코바").getFirst().getQuantity()).isEqualTo(0);
 
-        assertThat(products.getProductsByName("감자칩").stream()
-                .filter(p -> p.getPromotion().equals("null")).toList()
-                .get(0).getQuantity()).isEqualTo(2);
+        assertThat(products.getNullProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(2);
 
-        assertThat(products.getProductsByName("감자칩").stream()
-                .filter(p -> !p.getPromotion().equals("null")).toList()
-                .get(0).getQuantity()).isEqualTo(5);
+        assertThat(products.getPromotedProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(5);
     }
 
-    @Test
-    void 프로모션_무료_상품_추가_테스트() {
-        Orders orders = new Orders("[초코바-3],[감자칩-3],[초코바-3]", products);
-
-        LocalDateTime fakeTime = LocalDateTime.parse("2024-05-05T23:59:59");
-        PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
-        StockManager manager = new StockManager(products, promotions, timer);
-
-        //manager.askFreeAddition(orders);
-    }
 }

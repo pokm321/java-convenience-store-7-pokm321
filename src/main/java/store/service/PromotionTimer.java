@@ -19,8 +19,8 @@ public class PromotionTimer {
         this.dateTime = dateTime;
     }
 
-    public boolean isPromotion(Order order) {
-        Promotion promotion = promotions.getPromotion(products.getPromotionName(order.getName()));
+    public boolean isPromotionPeriod(Order order) {
+        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
 
         LocalDateTime startDate = LocalDate.parse(promotion.getStartDate()).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(promotion.getEndDate()).atStartOfDay().plusDays(1);

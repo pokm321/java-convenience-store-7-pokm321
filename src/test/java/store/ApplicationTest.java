@@ -1,16 +1,13 @@
 package store;
 
-import camp.nextstep.edu.missionutils.test.NsTest;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static camp.nextstep.edu.missionutils.test.Assertions.assertNowTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import camp.nextstep.edu.missionutils.test.NsTest;
+import org.junit.jupiter.api.Test;
+
 class ApplicationTest extends NsTest {
-//    @Test
+    //    @Test
 //    void 파일에_있는_상품_목록_출력() {
 //        assertSimpleTest(() -> {
 //            run("[물-1]", "N", "N");
@@ -60,6 +57,14 @@ class ApplicationTest extends NsTest {
 //            assertThat(output()).contains("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
 //        });
 //    }
+
+    @Test
+    void 프로모션_무료_상품_추가_테스트() {
+        assertSimpleTest(() -> {
+            runException("[초코바-1],[콜라-2],[초코바-2]", "Y", "Y");
+            assertThat(output()).contains("현재 콜라은(는) 1개를").contains("현재 초코바은(는) 1개를");
+        });
+    }
 
     @Override
     public void runMain() {

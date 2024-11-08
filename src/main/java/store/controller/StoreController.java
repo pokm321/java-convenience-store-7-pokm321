@@ -31,8 +31,9 @@ public class StoreController {
 
         PriceCalculator calculator = new PriceCalculator(products, promotions);
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
-        StockManager manager = new StockManager(products, promotions, timer);
+        StockManager manager = new StockManager(inputView, products, promotions, timer);
 
+        manager.askFreeAddition(orders);
         manager.deductOrders(orders);
 
         System.out.println(calculator.getRawTotalPrice(orders));

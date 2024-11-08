@@ -4,44 +4,52 @@ import java.util.Comparator;
 import java.util.List;
 import store.domain.Product;
 import store.domain.Products;
+import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
 import store.util.md.MdKeywords;
+import store.view.InputView;
 
 public class StockManager {
 
+    private final InputView inputView;
     private final Products products;
     private final Promotions promotions;
     private final PromotionTimer timer;
 
-    public StockManager(Products products, Promotions promotions, PromotionTimer timer) {
+    public StockManager(InputView inputView, Products products, Promotions promotions, PromotionTimer timer) {
         this.products = products;
         this.promotions = promotions;
         this.timer = timer;
-
+        this.inputView = inputView;
     }
 
-//    public void askFreeAddition(Orders orders) {
-//        Map<String, Integer> ordersMerged = orders.getMergedOrders();
-//        for (Entry<String, Integer> : ordersMerged.entrySet()) {
-//            if (canGetFree(order)) {
-//
-//            }
-//        }
-//    }
-//
-//    private boolean canGetFree(Order order) {
-//        List<Product> productsOnPromotion = products.getProductsByName(order.getName()).stream()
-//                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
-//
-//
-//    }
+    public void askFreeAddition(Orders orders) {
+        int freeAvailable;
+        for (Order order : orders.getAll()) {
+            if (timer.isPromotionPeriod(order) && (freeAvailable = getFreeAvailable(order)) > 0) {
+                inputView.askFreeAvailable(order.getName(), freeAvailable);
+            }
+        }
+    }
+
+    private int getFreeAvailable(Order order) {
+        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+        int buyGet = promotion.getBuy() + promotion.getGet();
+        int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
+        int multipleOfBuyGet = (order.getQuantity() / buyGet) * buyGet;
+
+        if ((order.getQuantity() - multipleOfBuyGet) >= promotion.getBuy() && stock >= multipleOfBuyGet + buyGet) {
+            return multipleOfBuyGet + buyGet - order.getQuantity();
+        }
+        return 0;
+    }
 
 
     public void deductOrders(Orders orders) {
         for (Order order : orders.getAll()) {
-            deductOrder(order, timer.isPromotion(order));
+            deductOrder(order, timer.isPromotionPeriod(order));
         }
     }
 

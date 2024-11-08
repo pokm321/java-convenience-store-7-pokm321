@@ -21,15 +21,15 @@ public class PromotionTimerTest {
 
         LocalDateTime fakeTime = LocalDateTime.parse("2023-05-08T01:20:30");
         PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
-        assertFalse(timer.isPromotion(order));
+        assertFalse(timer.isPromotionPeriod(order));
 
         fakeTime = LocalDateTime.parse("2024-12-31T23:59:59");
         timer = new PromotionTimer(products, promotions, fakeTime);
-        assertTrue(timer.isPromotion(order));
+        assertTrue(timer.isPromotionPeriod(order));
 
         fakeTime = LocalDateTime.parse("2024-01-01T00:00:01");
         timer = new PromotionTimer(products, promotions, fakeTime);
-        assertTrue(timer.isPromotion(order));
+        assertTrue(timer.isPromotionPeriod(order));
     }
 
 }
