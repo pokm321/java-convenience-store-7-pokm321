@@ -1,5 +1,6 @@
 package store.controller;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
@@ -29,12 +30,12 @@ public class StoreController {
         tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
         PriceCalculator calculator = new PriceCalculator(products);
-        PromotionTimer timer = new PromotionTimer(products, promotions);
+        PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
         StockManager manager = new StockManager(products, timer);
 
         System.out.println(calculator.getRawTotalPrice(orders));
 
-        manager.deductOrders(orders, timer.getNow());
+        manager.deductOrders(orders);
         outputView.printStock(products, promotions);
     }
 

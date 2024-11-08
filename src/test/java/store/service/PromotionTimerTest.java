@@ -14,20 +14,22 @@ public class PromotionTimerTest {
 
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
-    PromotionTimer timer = new PromotionTimer(products, promotions);
 
     @Test
     void 프로모션_시간_체크_테스트() {
         Order order = new Order("[사이다-5]");
 
         LocalDateTime fakeTime = LocalDateTime.parse("2023-05-08T01:20:30");
-        assertFalse(timer.isPromotion(order, fakeTime));
+        PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
+        assertFalse(timer.isPromotion(order));
 
         fakeTime = LocalDateTime.parse("2024-12-31T23:59:59");
-        assertTrue(timer.isPromotion(order, fakeTime));
+        timer = new PromotionTimer(products, promotions, fakeTime);
+        assertTrue(timer.isPromotion(order));
 
         fakeTime = LocalDateTime.parse("2024-01-01T00:00:01");
-        assertTrue(timer.isPromotion(order, fakeTime));
+        timer = new PromotionTimer(products, promotions, fakeTime);
+        assertTrue(timer.isPromotion(order));
     }
 
 }

@@ -1,6 +1,5 @@
 package store.service;
 
-import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,20 +14,22 @@ public class PromotionTimer {
 
     private final Products products;
     private final Promotions promotions;
+    private final LocalDateTime dateTime;
 
-    public PromotionTimer(Products products, Promotions promotions) {
+    public PromotionTimer(Products products, Promotions promotions, LocalDateTime dateTime) {
         this.products = products;
         this.promotions = promotions;
+        this.dateTime = dateTime;
     }
 
-    public boolean isPromotion(Order order, LocalDateTime date) {
+    public boolean isPromotion(Order order) {
         String promotionName = getPromotionName(order);
         Promotion promotion = promotions.getPromotionByName(promotionName);
 
         LocalDateTime startDate = LocalDate.parse(promotion.getStartDate()).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(promotion.getEndDate()).atStartOfDay().plusDays(1);
 
-        return date.isAfter(startDate) && date.isBefore(endDate);
+        return dateTime.isAfter(startDate) && dateTime.isBefore(endDate);
     }
 
     private String getPromotionName(Order order) {
@@ -40,9 +41,5 @@ public class PromotionTimer {
         }
 
         return productsOnPromotion.getFirst().getPromotion();
-    }
-
-    public LocalDateTime getNow() {
-        return DateTimes.now();
     }
 }

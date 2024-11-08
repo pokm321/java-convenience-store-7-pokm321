@@ -14,8 +14,6 @@ public class StockManagerTest {
 
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
-    PromotionTimer timer = new PromotionTimer(products, promotions);
-    StockManager manager = new StockManager(products, timer);
 
     @Test
     void 여러_주문_기능_테스트() {
@@ -24,7 +22,9 @@ public class StockManagerTest {
                 .mapToInt(Product::getQuantity).sum()).isEqualTo(10);
 
         LocalDateTime fakeTime = LocalDateTime.parse("2024-05-05T23:59:59");
-        manager.deductOrders(orders, fakeTime);
+        PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
+        StockManager manager = new StockManager(products, timer);
+        manager.deductOrders(orders);
 
         assertThat(products.getProductsByName("초코바").stream()
                 .filter(p -> p.getPromotion().equals("null")).toList()

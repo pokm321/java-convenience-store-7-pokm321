@@ -1,6 +1,5 @@
 package store.service;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import store.domain.Product;
@@ -19,9 +18,9 @@ public class StockManager {
         this.timer = timer;
     }
 
-    public void deductOrders(Orders orders, LocalDateTime time) {
+    public void deductOrders(Orders orders) {
         for (Order order : orders.getAll()) {
-            deductOrder(order, timer.isPromotion(order, time));
+            deductOrder(order, timer.isPromotion(order));
         }
     }
 
