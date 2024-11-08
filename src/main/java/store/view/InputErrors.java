@@ -1,4 +1,4 @@
-package store.domain.input;
+package store.view;
 
 public enum InputErrors {
     ERROR("[ERROR]"),

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import store.domain.input.InputErrors;
 import store.util.md.MdErrors;
 import store.util.md.MdKeywords;
+import store.view.InputErrors;
 
 public class Products {
 

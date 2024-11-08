@@ -3,7 +3,7 @@ package store.domain.input;
 public class Order {
 
     private final String name;
-    private final int quantity;
+    private int quantity;
 
     public Order(String name, int quantity) {
         this.name = name;
@@ -16,5 +16,9 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

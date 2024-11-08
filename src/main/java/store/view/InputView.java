@@ -9,8 +9,18 @@ public class InputView {
         return Console.readLine();
     }
 
-    public String askFreeAvailable(String name, int freeAvailable) {
+    public boolean isAddingFree(String name, int freeAvailable) throws IllegalArgumentException {
         System.out.printf(OutputMessages.ADD_PROMOTED_PRODUCT.getMessage(), name, freeAvailable);
-        return Console.readLine();
+        return convertYesOrNo(Console.readLine());
+    }
+
+    private boolean convertYesOrNo(String input) throws IllegalArgumentException {
+        if (input.equals("Y")) {
+            return true;
+        }
+        if (input.equals("N")) {
+            return false;
+        }
+        throw new IllegalArgumentException(InputErrors.OTHERS.getMessage());
     }
 }

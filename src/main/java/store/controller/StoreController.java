@@ -7,6 +7,7 @@ import store.domain.input.Orders;
 import store.service.PriceCalculator;
 import store.service.PromotionTimer;
 import store.service.StockManager;
+import store.util.Retrier;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -26,28 +27,20 @@ public class StoreController {
     }
 
     public void run() {
+        Retrier retrier = new Retrier();
         outputView.printStock(products, promotions);
-        tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
+        retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
         PriceCalculator calculator = new PriceCalculator(products, promotions);
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
-        StockManager manager = new StockManager(inputView, products, promotions, timer);
+        StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
-        manager.askFreeAddition(orders);
+        manager.askFreeAdditions(orders);
         manager.deductOrders(orders);
 
         System.out.println(calculator.getRawTotalPrice(orders));
+        outputView.printStock(products, promotions);
 
     }
 
-    private void tryUntilSuccess(Runnable function) {
-        while (true) {
-            try {
-                function.run();
-                break;
-            } catch (IllegalArgumentException error) {
-                outputView.printError(error.getMessage());
-            }
-        }
-    }
 }

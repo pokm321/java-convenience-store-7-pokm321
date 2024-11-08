@@ -8,6 +8,7 @@ import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
+import store.util.Retrier;
 import store.util.md.MdPaths;
 import store.view.InputView;
 
@@ -16,6 +17,7 @@ public class StockManagerTest {
     InputView inputView = new InputView();
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+    Retrier retrier = new Retrier();
 
     @Test
     void 여러_주문_기능_테스트() {
@@ -25,7 +27,7 @@ public class StockManagerTest {
 
         LocalDateTime fakeTime = LocalDateTime.parse("2024-05-05T23:59:59");
         PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
-        StockManager manager = new StockManager(inputView, products, promotions, timer);
+        StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
         manager.deductOrders(orders);
 
