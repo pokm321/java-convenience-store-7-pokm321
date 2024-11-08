@@ -32,11 +32,9 @@ public class StockManagerTest {
         manager.deductOrders(orders);
 
         assertThat(products.getNullProductsByName("초코바").getFirst().getQuantity()).isEqualTo(4);
-
         assertThat(products.getPromotedProductsByName("초코바").getFirst().getQuantity()).isEqualTo(0);
 
         assertThat(products.getNullProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(2);
-
         assertThat(products.getPromotedProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(5);
     }
 

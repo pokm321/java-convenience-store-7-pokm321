@@ -50,12 +50,12 @@ public class StockManager {
 
     private int getFreeCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int buyGet = promotion.getBuy() + promotion.getGet();
         int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
-        int multipleOfBuyGet = (order.getQuantity() / buyGet) * buyGet;
+        int buyGet = promotion.getBuy() + promotion.getGet();
+        int intactBuyGets = (order.getQuantity() / buyGet) * buyGet;
 
-        if ((order.getQuantity() - multipleOfBuyGet) >= promotion.getBuy() && stock >= multipleOfBuyGet + buyGet) {
-            return multipleOfBuyGet + buyGet - order.getQuantity();
+        if ((order.getQuantity() - intactBuyGets) >= promotion.getBuy() && stock >= intactBuyGets + buyGet) {
+            return intactBuyGets + buyGet - order.getQuantity();
         }
         return 0;
     }
@@ -64,6 +64,41 @@ public class StockManager {
         order.setQuantity(order.getQuantity() + freeCount);
     }
 
+    ///////////
+    
+    public void askNotEnoughPromotionStocks(Orders orders) {
+        for (Order order : orders.getAll()) {
+            askNotEnoughPromotionStock(order);
+        }
+    }
+
+
+    private void askNotEnoughPromotionStock(Order order) {
+        int noPromotionCount;
+        if (timer.isPromotionPeriod(order) && (noPromotionCount = getNoPromotionCount(order)) > 0) {
+            if (!retrier.tryUntilSuccess(inputView::isGoingNoPromotionPrice, order.getName(), noPromotionCount)) {
+                subtractNoPromotionToOrder(order, noPromotionCount);
+            }
+        }
+    }
+
+    private int getNoPromotionCount(Order order) {
+        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+        int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
+        int buyGet = promotion.getBuy() + promotion.getGet();
+        int intactBuyGets = (order.getQuantity() / buyGet) * buyGet;
+
+        if (stock < intactBuyGets) {
+            return order.getQuantity() - (stock / buyGet) * buyGet;
+        }
+        return 0;
+    }
+
+    private void subtractNoPromotionToOrder(Order order, int noPromotionCount) {
+        order.setQuantity(order.getQuantity() - noPromotionCount);
+    }
+
+    ///////////
 
     public void deductOrders(Orders orders) {
         for (Order order : orders.getAll()) {

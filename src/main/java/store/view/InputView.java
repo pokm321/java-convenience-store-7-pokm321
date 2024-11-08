@@ -9,8 +9,13 @@ public class InputView {
         return Console.readLine();
     }
 
-    public boolean isAddingFree(String name, int freeAvailable) throws IllegalArgumentException {
-        System.out.printf(OutputMessages.ADD_PROMOTED_PRODUCT.getMessage(), name, freeAvailable);
+    public boolean isAddingFree(String name, int freeCount) throws IllegalArgumentException {
+        System.out.printf(OutputMessages.ADD_PROMOTED_PRODUCT.getMessage(), name, freeCount);
+        return convertYesOrNo(Console.readLine());
+    }
+
+    public boolean isGoingNoPromotionPrice(String name, int noPromotionCount) throws IllegalArgumentException {
+        System.out.printf(OutputMessages.NOT_ENOUGH_PROMOTED_QUANTITY.getMessage(), name, noPromotionCount);
         return convertYesOrNo(Console.readLine());
     }
 

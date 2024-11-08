@@ -36,6 +36,7 @@ public class StoreController {
         StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
         manager.askFreeAdditions(orders);
+        manager.askNotEnoughPromotionStocks(orders);
         manager.deductOrders(orders);
 
         System.out.println(calculator.getRawTotalPrice(orders));
