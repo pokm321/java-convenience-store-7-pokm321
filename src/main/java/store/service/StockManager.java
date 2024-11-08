@@ -52,10 +52,10 @@ public class StockManager {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
         int buyGet = promotion.getBuy() + promotion.getGet();
-        int intactBuyGets = (order.getQuantity() / buyGet) * buyGet;
+        int promotedCount = (order.getQuantity() / buyGet) * buyGet;
 
-        if ((order.getQuantity() - intactBuyGets) >= promotion.getBuy() && stock >= intactBuyGets + buyGet) {
-            return intactBuyGets + buyGet - order.getQuantity();
+        if ((order.getQuantity() - promotedCount) >= promotion.getBuy() && stock >= promotedCount + buyGet) {
+            return promotedCount + buyGet - order.getQuantity();
         }
         return 0;
     }
@@ -65,7 +65,7 @@ public class StockManager {
     }
 
     ///////////
-    
+
     public void askNotEnoughPromotionStocks(Orders orders) {
         for (Order order : orders.getAll()) {
             askNotEnoughPromotionStock(order);
@@ -86,12 +86,22 @@ public class StockManager {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
         int buyGet = promotion.getBuy() + promotion.getGet();
-        int intactBuyGets = (order.getQuantity() / buyGet) * buyGet;
 
-        if (stock < intactBuyGets) {
+        int promotionsToGet = getPromotionsToGet(order, buyGet, promotion.getBuy());
+        if (stock < promotionsToGet) {
             return order.getQuantity() - (stock / buyGet) * buyGet;
         }
         return 0;
+    }
+
+    private int getPromotionsToGet(Order order, int buyGet, int buy) {
+        int promotionsToGet = (order.getQuantity() / buyGet) * buyGet;
+
+        if (order.getQuantity() - promotionsToGet >= buy) {
+            promotionsToGet = promotionsToGet + buyGet;
+        }
+
+        return promotionsToGet;
     }
 
     private void subtractNoPromotionToOrder(Order order, int noPromotionCount) {
