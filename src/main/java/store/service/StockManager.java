@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import store.domain.Product;
 import store.domain.Products;
+import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
 import store.util.md.MdKeywords;
@@ -11,12 +12,32 @@ import store.util.md.MdKeywords;
 public class StockManager {
 
     private final Products products;
+    private final Promotions promotions;
     private final PromotionTimer timer;
 
-    public StockManager(Products products, PromotionTimer timer) {
+    public StockManager(Products products, Promotions promotions, PromotionTimer timer) {
         this.products = products;
+        this.promotions = promotions;
         this.timer = timer;
+
     }
+
+//    public void askFreeAddition(Orders orders) {
+//        Map<String, Integer> ordersMerged = orders.getMergedOrders();
+//        for (Entry<String, Integer> : ordersMerged.entrySet()) {
+//            if (canGetFree(order)) {
+//
+//            }
+//        }
+//    }
+//
+//    private boolean canGetFree(Order order) {
+//        List<Product> productsOnPromotion = products.getProductsByName(order.getName()).stream()
+//                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+//
+//
+//    }
+
 
     public void deductOrders(Orders orders) {
         for (Order order : orders.getAll()) {

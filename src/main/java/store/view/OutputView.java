@@ -14,10 +14,10 @@ public class OutputView {
     }
 
     public void printStock(Products products, Promotions promotions) {
-        System.out.printf(Outputs.WELCOME.getMessage());
+        System.out.printf(OutputMessages.WELCOME.getMessage());
 
         for (Product product : products.getAll()) {
-            System.out.printf(Outputs.ITEM_INFO.getMessage(),
+            System.out.printf(OutputMessages.ITEM_INFO.getMessage(),
                     product.getName(), product.getPrice());
 
             printQuantity(product.getQuantity());
@@ -29,10 +29,10 @@ public class OutputView {
 
     private void printQuantity(int quantity) {
         if (quantity == NO_QUANTITY_MD) {
-            System.out.print(Outputs.NO_QUANTITY_OUTPUT.getMessage());
+            System.out.print(OutputMessages.NO_QUANTITY_OUTPUT.getMessage());
             return;
         }
-        System.out.printf(Outputs.QUANTITY.getMessage(), quantity);
+        System.out.printf(OutputMessages.QUANTITY.getMessage(), quantity);
     }
 
     private void printPromotion(String promotion) {
@@ -40,7 +40,7 @@ public class OutputView {
             System.out.println();
             return;
         }
-        System.out.println(Outputs.SPACE.getMessage() + promotion);
+        System.out.println(OutputMessages.SPACE.getMessage() + promotion);
     }
 
     public void printProducts() {

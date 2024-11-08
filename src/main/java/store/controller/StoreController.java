@@ -31,12 +31,12 @@ public class StoreController {
 
         PriceCalculator calculator = new PriceCalculator(products, promotions);
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
-        StockManager manager = new StockManager(products, timer);
+        StockManager manager = new StockManager(products, promotions, timer);
+
+        manager.deductOrders(orders);
 
         System.out.println(calculator.getRawTotalPrice(orders));
 
-        manager.deductOrders(orders);
-        outputView.printStock(products, promotions);
     }
 
     private void tryUntilSuccess(Runnable function) {

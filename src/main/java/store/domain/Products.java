@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import store.domain.input.InputErrors;
 import store.util.md.MdErrors;
 import store.util.md.MdKeywords;
@@ -46,6 +48,11 @@ public class Products {
                 .getPrice();
     }
 
+    public Map<String, Integer> mergeProducts() {
+        Map<String, Integer> mergedProducts = new HashMap<>();
+        listOfProducts.forEach(p -> mergedProducts.merge(p.getName(), p.getQuantity(), Integer::sum));
+        return mergedProducts;
+    }
 
     private void addItems(BufferedReader reader) throws IOException {
         String line;

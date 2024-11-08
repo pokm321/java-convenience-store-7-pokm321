@@ -1,36 +1,66 @@
 package store.domain.input;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import store.domain.Product;
+import java.util.Map.Entry;
 import store.domain.Products;
 
 public class Orders {
 
     private static final String COMMA = ",";
+    private static final char LEFT_BRACKET = '[';
+    private static final char RIGHT_BRACKET = ']';
+    private static final String HYPHEN = "-";
+    private static final int MIN_QUANTITY = 0;
 
     private List<Order> listOfOrders = new ArrayList<>();
 
     public Orders(String rawOrders, Products products) {
-        validate(rawOrders);
+        validateParsing(rawOrders);
 
-        for (String rawOrder : rawOrders.split(COMMA)) {
-            listOfOrders.add(new Order(rawOrder));
+        for (Entry<String, Integer> order : parseOrders(rawOrders).entrySet()) {
+            listOfOrders.add(new Order(order.getKey(), order.getValue()));
         }
 
-        validateQuantity(products);
+        validateWithStock(products);
     }
 
     public List<Order> getAll() {
         return listOfOrders;
     }
 
-    private void validate(String rawOrders) {
+    public Map<String, Integer> parseOrders(String rawOrders) {
+        Map<String, Integer> mergedOrders = new HashMap<>();
+
+        splitOrders(rawOrders).forEach(order -> {
+            List<String> fields = getFields(order);
+            mergedOrders.merge(fields.get(0), Integer.parseInt(fields.get(1)), Integer::sum);
+        });
+        return mergedOrders;
+    }
+
+    private List<String> splitOrders(String rawOrders) {
+        return List.of(rawOrders.split(COMMA, -1));
+    }
+
+    private List<String> getFields(String rawOrder) {
+        rawOrder = rawOrder.substring(1, rawOrder.length() - 1);
+        return List.of(rawOrder.split(HYPHEN, -1));
+    }
+
+    private void validateParsing(String rawOrders) {
         validateNotNull(rawOrders);
         validateNotEmpty(rawOrders);
+
+        for (String order : splitOrders(rawOrders)) {
+            validateBrackets(order);
+            validateHyphen(order);
+            validateInteger(order);
+            validateRange(order);
+        }
     }
 
     private void validateNotNull(String rawOrders) {
@@ -43,30 +73,56 @@ public class Orders {
         if (rawOrders.isBlank()) {
             throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
         }
-    }
 
-    public void validateQuantity(Products products) {
-        if (!isEnoughQuantity(products)) {
-            throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
+        if (Arrays.stream(rawOrders.split(COMMA)).anyMatch(String::isBlank)) {
+            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
         }
     }
 
-    private boolean isEnoughQuantity(Products products) {
-        Map<String, Integer> ordersMerged = getMergedPairs(listOfOrders, Order::getName, Order::getQuantity);
-        Map<String, Integer> productsMerged = getMergedPairs(products.getAll(), Product::getName, Product::getQuantity);
+    private void validateBrackets(String order) {
+        if (order.charAt(0) != LEFT_BRACKET || order.charAt(order.length() - 1) != RIGHT_BRACKET) {
+            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+        }
 
-        return ordersMerged.keySet().stream()
-                .allMatch(orderName -> productsMerged.get(orderName) >= ordersMerged.get(orderName));
     }
 
-    private <T> Map<String, Integer> getMergedPairs(List<T> items, Function<T, String> getName,
-                                                    Function<T, Integer> getQuantity) {
-        Map<String, Integer> nameQuantity = new HashMap<>();
-        items.forEach(item ->
-                nameQuantity.merge(getName.apply(item), getQuantity.apply(item), Integer::sum)
-        );
+    private void validateHyphen(String order) {
+        if (order.replace(HYPHEN, "").length() + 1 != order.length()) {
+            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+        }
+    }
 
-        return nameQuantity;
+    private void validateInteger(String order) {
+        try {
+
+            Integer.parseInt(getFields(order).get(1));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+        }
+    }
+
+    private void validateRange(String order) {
+        if (Integer.parseInt(getFields(order).get(1)) <= MIN_QUANTITY) {
+            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+        }
+    }
+
+    private void validateWithStock(Products products) {
+        validateNameExists(products);
+        validateQuantityEnough(products);
+    }
+
+    private void validateNameExists(Products products) {
+        if (listOfOrders.stream().anyMatch(order -> products.getProductsByName(order.getName()).isEmpty())) {
+            throw new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage());
+        }
+    }
+
+    private void validateQuantityEnough(Products products) {
+        Map<String, Integer> productsMerged = products.mergeProducts();
+        if (listOfOrders.stream().anyMatch(order -> productsMerged.get(order.getName()) < order.getQuantity())) {
+            throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
+        }
     }
 
 }
