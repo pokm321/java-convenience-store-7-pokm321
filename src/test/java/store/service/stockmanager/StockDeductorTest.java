@@ -9,12 +9,12 @@ import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PromotionTimer;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 
 public class StockDeductorTest {
 
-    Products products = new Products(MdPaths.PRODUCTS.getPath());
-    Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
+    Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
     PromotionTimer timer = new PromotionTimer(products, promotions);
     StockDeductor deductor = new StockDeductor(products, timer);
 

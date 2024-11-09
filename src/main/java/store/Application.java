@@ -10,7 +10,7 @@ import store.service.ordermanager.NonPromotionAsker;
 import store.service.stockmanager.FreeProductsChecker;
 import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -18,8 +18,8 @@ public class Application {
     public static void main(String[] args) {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
-        Products products = new Products(MdPaths.PRODUCTS.getPath());
-        Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+        Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
+        Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
         Retrier retrier = new Retrier();
         PromotionTimer timer = new PromotionTimer(products, promotions);
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);

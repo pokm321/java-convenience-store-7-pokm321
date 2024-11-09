@@ -2,7 +2,9 @@ package store.util.md;
 
 public enum MdKeywords {
 
-    NULL("null");
+    NULL("null"),
+    PRODUCTS_PATH("src/main/resources/products.md"),
+    PROMOTIONS_PATH("src/main/resources/promotions.md");
 
     private final String value;
 

@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import store.domain.Products;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 
 public class OrdersTest {
 
-    Products products = new Products(MdPaths.PRODUCTS.getPath());
+    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
 
     @Test
     void 객체_생성_테스트() {
@@ -54,7 +54,7 @@ public class OrdersTest {
             Orders orders = new Orders("[콜라-3], [사이다-4]", products);
         }).isInstanceOf(IllegalArgumentException.class);
     }
-    
+
     @ParameterizedTest
     @ValueSource(strings = {"콜라-123", "[콜라-123", "콜라-123],[사이다-4]"})
     void bracket_제거_예외_테스트(String rawOrder) {

@@ -3,14 +3,14 @@ package store.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 
 public class ProductsTest {
     private static final String productsPath = "src/main/resources/products.md";
 
     @Test
     void 제품_추가_테스트() {
-        Products products = new Products(MdPaths.PRODUCTS.getPath());
+        Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
 
         assertThat(products.getAll().get(0).getName())
                 .isEqualTo("콜라");

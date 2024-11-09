@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Order;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 
 public class PromotionTimerTest {
 
-    Products products = new Products(MdPaths.PRODUCTS.getPath());
-    Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
+    Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
     PromotionTimer timer = new PromotionTimer(products, promotions);
 
     @Test

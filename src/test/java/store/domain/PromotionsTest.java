@@ -3,13 +3,13 @@ package store.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 
 public class PromotionsTest {
 
     @Test
     void 제품_추가_테스트() {
-        Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+        Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
 
         assertThat(promotions.getAll().get(0).getBuy())
                 .isEqualTo(2);

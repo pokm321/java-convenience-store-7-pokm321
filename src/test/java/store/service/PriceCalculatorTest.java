@@ -11,14 +11,14 @@ import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.stockmanager.FreeProductsChecker;
 import store.util.Retrier;
-import store.util.md.MdPaths;
+import store.util.md.MdKeywords;
 import store.view.InputView;
 
 public class PriceCalculatorTest {
 
     InputView inputView = new InputView();
-    Products products = new Products(MdPaths.PRODUCTS.getPath());
-    Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
+    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
+    Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
     Retrier retrier = new Retrier();
     PromotionTimer timer = new PromotionTimer(products, promotions);
     FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
