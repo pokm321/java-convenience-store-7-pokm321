@@ -49,7 +49,7 @@ public class StoreController {
                     calculator.getPromotionDiscount(freeProducts), calculator.getMembershipDiscount(orders));
 
             manager.deductOrders(orders);
-            isShopping = inputView.isGoingAnotherShopping();
+            isShopping = retrier.tryUntilSuccess(inputView::isGoingAnotherShopping);
         }
 
     }
