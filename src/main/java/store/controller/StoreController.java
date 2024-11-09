@@ -35,12 +35,11 @@ public class StoreController {
         retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
-        PriceCalculator calculator = new PriceCalculator(products, promotions, timer);
+        PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
         manager.askFreeAdditions(orders);
         manager.askNotEnoughPromotionStocks(orders);
-
         manager.deductOrders(orders);
 
         Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
