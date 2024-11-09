@@ -7,7 +7,10 @@ import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PriceCalculator;
 import store.service.PromotionTimer;
-import store.service.StockManager;
+import store.service.ordermanager.FreeAdditionAsker;
+import store.service.ordermanager.NonPromotionAsker;
+import store.service.stockmanager.FreeProductsChecker;
+import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
 import store.view.InputView;
 import store.view.OutputView;
@@ -21,11 +24,16 @@ public class StoreController {
     private final Retrier retrier;
     private final PromotionTimer timer;
     private final PriceCalculator calculator;
-    private final StockManager manager;
+    private final FreeAdditionAsker freeAsker;
+    private final NonPromotionAsker nonPromotionAsker;
+    private final FreeProductsChecker freeProductsChecker;
+    private final StockDeductor deductor;
     private Orders orders;
 
     public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions,
-                           Retrier retrier, PromotionTimer timer, PriceCalculator calculator, StockManager manager) {
+                           Retrier retrier, PromotionTimer timer, PriceCalculator calculator,
+                           FreeAdditionAsker freeAsker, NonPromotionAsker nonPromotionAsker,
+                           FreeProductsChecker freeProductsChecker, StockDeductor deductor) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.products = products;
@@ -33,7 +41,10 @@ public class StoreController {
         this.retrier = retrier;
         this.timer = timer;
         this.calculator = calculator;
-        this.manager = manager;
+        this.freeAsker = freeAsker;
+        this.nonPromotionAsker = nonPromotionAsker;
+        this.freeProductsChecker = freeProductsChecker;
+        this.deductor = deductor;
     }
 
     public void run() {
@@ -55,16 +66,16 @@ public class StoreController {
     }
 
     private void adjustOrders() {
-        manager.askFreeAdditions(orders);
-        manager.askNotEnoughPromotionStocks(orders);
+        freeAsker.ask(orders);
+        nonPromotionAsker.ask(orders);
     }
 
     private void processOrders() {
-        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
         outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
                 calculator.getPromotionDiscount(freeProducts), calculator.askMembershipDiscount(orders));
 
-        manager.deductOrders(orders);
+        deductor.deductOrders(orders);
     }
 
 }

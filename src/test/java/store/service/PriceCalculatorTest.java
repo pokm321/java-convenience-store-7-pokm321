@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
+import store.service.stockmanager.FreeProductsChecker;
 import store.util.Retrier;
 import store.util.md.MdPaths;
 import store.view.InputView;
@@ -20,7 +21,7 @@ public class PriceCalculatorTest {
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
     Retrier retrier = new Retrier();
     PromotionTimer timer = new PromotionTimer(products, promotions);
-    StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
+    FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
     PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
 
     @Test
@@ -36,15 +37,15 @@ public class PriceCalculatorTest {
         Orders orders = new Orders("[초코바-10],[사이다-9],[감자칩-2]", products);
 
         timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
-        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
         assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(0L);
 
         timer.setTime(LocalDateTime.parse("2024-05-08T01:20:30"));
-        freeProducts = manager.getFreeProducts(orders);
+        freeProducts = freeProductsChecker.check(orders);
         assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(4400L);
 
         timer.setTime(LocalDateTime.parse("2024-11-08T01:20:30"));
-        freeProducts = manager.getFreeProducts(orders);
+        freeProducts = freeProductsChecker.check(orders);
         assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(5900L);
     }
 
