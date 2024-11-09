@@ -19,8 +19,8 @@ public class InputView {
         return convertYesOrNo(Console.readLine());
     }
 
-    public boolean isMembership(String name, int noPromotionCount) {
-        System.out.printf(ViewMessages.NOT_ENOUGH_PROMOTED_QUANTITY.getMessage(), name, noPromotionCount);
+    public boolean isMembership() {
+        System.out.printf(ViewMessages.ASK_MEMBERSHIP.getMessage());
         return convertYesOrNo(Console.readLine());
     }
 

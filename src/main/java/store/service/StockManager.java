@@ -1,7 +1,9 @@
 package store.service;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotion;
@@ -47,7 +49,7 @@ public class StockManager {
 
     private int getFreeCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
+        int stock = products.getPromotedQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotedCount = (order.getQuantity() / buyGet) * buyGet;
 
@@ -81,7 +83,7 @@ public class StockManager {
 
     private int getNoPromotionCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int stock = products.getPromotedProductsByName(order.getName()).getFirst().getQuantity();
+        int stock = products.getPromotedQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
 
         int promotionsToGet = getPromotionsToGet(order, buyGet, promotion.getBuy());
@@ -103,6 +105,25 @@ public class StockManager {
 
     private void subtractNoPromotionToOrder(Order order, int noPromotionCount) {
         order.setQuantity(order.getQuantity() - noPromotionCount);
+    }
+
+    ///////////
+
+    public Map<String, Integer> getFreeProducts(Orders orders) {
+        Map<String, Integer> freeProducts = new HashMap<>();
+        for (Order order : orders.getAll()) {
+            if (!timer.isPromotionPeriod(order)) {
+                continue;
+            }
+
+            Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+            int buyGet = promotion.getBuy() + promotion.getGet();
+            int stock = products.getPromotedQuantityByName(order.getName());
+            int freeCount = (Math.min(stock, order.getQuantity()) / buyGet) * promotion.getGet();
+
+            freeProducts.put(order.getName(), freeCount);
+        }
+        return freeProducts;
     }
 
     ///////////

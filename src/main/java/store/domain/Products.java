@@ -51,6 +51,13 @@ public class Products {
                 .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
     }
 
+    public int getPromotedQuantityByName(String name) {
+        if (getPromotedProductsByName(name).isEmpty()) {
+            return 0;
+        }
+        return getPromotedProductsByName(name).getFirst().getQuantity();
+    }
+
     public int getPriceByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage()))

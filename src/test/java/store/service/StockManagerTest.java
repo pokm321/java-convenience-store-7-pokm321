@@ -1,8 +1,10 @@
 package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import store.domain.Product;
 import store.domain.Products;
@@ -38,4 +40,31 @@ public class StockManagerTest {
         assertThat(products.getPromotedProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(5);
     }
 
+    @Test
+    void 증정품_기능_테스트_1() {
+        Orders orders = new Orders("[초코바-3],[감자칩-3],[초코바-3],[사이다-8]", products);
+
+        LocalDateTime fakeTime = LocalDateTime.parse("2024-05-05T23:59:59");
+        PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
+        StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
+
+        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        assertThat(freeProducts.get("초코바")).isEqualTo(2);
+        assertThat(freeProducts.get("사이다")).isEqualTo(2);
+        assertFalse(freeProducts.containsKey("감자칩"));
+    }
+
+    @Test
+    void 증정품_기능_테스트_2() {
+        Orders orders = new Orders("[초코바-3],[감자칩-3],[초코바-3],[사이다-8]", products);
+
+        LocalDateTime fakeTime = LocalDateTime.parse("2024-11-05T23:59:59");
+        PromotionTimer timer = new PromotionTimer(products, promotions, fakeTime);
+        StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
+
+        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        assertThat(freeProducts.get("초코바")).isEqualTo(2);
+        assertThat(freeProducts.get("사이다")).isEqualTo(2);
+        assertThat(freeProducts.get("감자칩")).isEqualTo(1);
+    }
 }

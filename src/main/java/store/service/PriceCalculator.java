@@ -21,17 +21,24 @@ public class PriceCalculator {
                 .sum();
     }
 
-    public long getPromotedTotalPrice(Orders orders, PromotionTimer timer) {
+    public long getPromotedDiscount(Orders orders, PromotionTimer timer) {
         return orders.getAll().stream()
                 .mapToLong(order -> {
-                    int orderPrice = order.getQuantity() * products.getPriceByName(order.getName());
-                    if (timer.isPromotionPeriod(order)) {
-                        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-                        orderPrice =
-                                orderPrice * promotion.getBuy() / (promotion.getBuy() + promotion.getGet());
+                    if (!timer.isPromotionPeriod(order)) {
+                        return 0;
                     }
+
+                    int orderPrice = order.getQuantity() * products.getPriceByName(order.getName());
+
+                    Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+                    int buyGet = promotion.getBuy() + promotion.getGet();
+
+                    orderPrice =
+                            orderPrice * promotion.getBuy() / (promotion.getBuy() + promotion.getGet());
+
                     return orderPrice;
                 }).sum();
     }
+
 
 }
