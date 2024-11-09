@@ -18,7 +18,7 @@ public class PromotionTimerTest {
 
     @Test
     void 프로모션_시간_체크_테스트() {
-        Order order = new Order("사이다", 5);
+        Order order = new Order("사이다", 5, products);
 
         timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
         assertFalse(timer.isPromotionPeriod(order));

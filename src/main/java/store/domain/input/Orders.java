@@ -2,10 +2,9 @@ package store.domain.input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import store.domain.Products;
 import store.view.InputErrors;
 
@@ -17,30 +16,22 @@ public class Orders {
     private static final String HYPHEN = "-";
     private static final int MIN_QUANTITY = 0;
 
-    private List<Order> listOfOrders = new ArrayList<>();
+    private final List<Order> listOfOrders = new ArrayList<>();
 
     public Orders(String rawOrders, Products products) {
-        validateParsing(rawOrders);
+        validate(rawOrders);
 
-        for (Entry<String, Integer> order : parseOrders(rawOrders).entrySet()) {
-            listOfOrders.add(new Order(order.getKey(), order.getValue()));
-        }
-
-        validateWithStock(products);
+        getMergedOrders(rawOrders).forEach((name, quantity) ->
+                listOfOrders.add(new Order(name, quantity, products)));
     }
 
     public List<Order> getAll() {
         return listOfOrders;
     }
 
-    public Map<String, Integer> parseOrders(String rawOrders) {
-        Map<String, Integer> mergedOrders = new HashMap<>();
-
-        splitOrders(rawOrders).forEach(order -> {
-            List<String> fields = getFields(order);
-            mergedOrders.merge(fields.get(0), Integer.parseInt(fields.get(1)), Integer::sum);
-        });
-        return mergedOrders;
+    public Map<String, Integer> getMergedOrders(String rawOrders) {
+        return splitOrders(rawOrders).stream().map(this::getFields).collect(Collectors.toMap(fields ->
+                fields.get(0), fields -> Integer.parseInt(fields.get(1)), Integer::sum));
     }
 
     private List<String> splitOrders(String rawOrders) {
@@ -52,7 +43,7 @@ public class Orders {
         return List.of(rawOrder.split(HYPHEN, -1));
     }
 
-    private void validateParsing(String rawOrders) {
+    private void validate(String rawOrders) {
         validateNotNull(rawOrders);
         validateNotEmpty(rawOrders);
 
@@ -105,24 +96,6 @@ public class Orders {
     private void validateRange(String order) {
         if (Integer.parseInt(getFields(order).get(1)) <= MIN_QUANTITY) {
             throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
-        }
-    }
-
-    private void validateWithStock(Products products) {
-        validateNameExists(products);
-        validateQuantityEnough(products);
-    }
-
-    private void validateNameExists(Products products) {
-        if (listOfOrders.stream().anyMatch(order -> products.getProductsByName(order.getName()).isEmpty())) {
-            throw new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage());
-        }
-    }
-
-    private void validateQuantityEnough(Products products) {
-        Map<String, Integer> productsMerged = products.mergeProducts();
-        if (listOfOrders.stream().anyMatch(order -> productsMerged.get(order.getName()) < order.getQuantity())) {
-            throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
         }
     }
 
