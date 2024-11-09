@@ -46,7 +46,7 @@ public class StoreController {
 
             Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
             outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
-                    calculator.getPromotedDiscount(freeProducts), calculator.getMembershipDiscount(orders));
+                    calculator.getPromotionDiscount(freeProducts), calculator.getMembershipDiscount(orders));
 
             manager.deductOrders(orders);
             isShopping = inputView.isGoingAnotherShopping();

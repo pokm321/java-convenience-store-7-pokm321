@@ -38,21 +38,21 @@ public class PriceCalculatorTest {
         StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
-        assertThat(calculator.getPromotedDiscount(freeProducts)).isEqualTo(0L);
+        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(0L);
 
         fakeTime = LocalDateTime.parse("2024-05-08T01:20:30");
         timer = new PromotionTimer(products, promotions, fakeTime);
         manager = new StockManager(inputView, products, promotions, timer, retrier);
         calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         freeProducts = manager.getFreeProducts(orders);
-        assertThat(calculator.getPromotedDiscount(freeProducts)).isEqualTo(4400L);
+        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(4400L);
 
         fakeTime = LocalDateTime.parse("2024-11-08T01:20:30");
         timer = new PromotionTimer(products, promotions, fakeTime);
         manager = new StockManager(inputView, products, promotions, timer, retrier);
         calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         freeProducts = manager.getFreeProducts(orders);
-        assertThat(calculator.getPromotedDiscount(freeProducts)).isEqualTo(5900L);
+        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(5900L);
     }
 
     @Test

@@ -35,7 +35,7 @@ public class PriceCalculator {
                 .sum();
     }
 
-    public long getPromotedDiscount(Map<String, Integer> freeProducts) {
+    public long getPromotionDiscount(Map<String, Integer> freeProducts) {
         return freeProducts.entrySet().stream()
                 .mapToLong(p -> (long) products.getPriceByName(p.getKey()) * p.getValue()).sum();
     }

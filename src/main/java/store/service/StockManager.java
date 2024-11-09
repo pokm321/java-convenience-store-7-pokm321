@@ -49,11 +49,11 @@ public class StockManager {
 
     private int getFreeCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int stock = products.getPromotedQuantityByName(order.getName());
+        int promotionStock = products.getPromotedQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotedCount = (order.getQuantity() / buyGet) * buyGet;
 
-        if ((order.getQuantity() - promotedCount) >= promotion.getBuy() && stock >= promotedCount + buyGet) {
+        if ((order.getQuantity() - promotedCount) >= promotion.getBuy() && promotionStock >= promotedCount + buyGet) {
             return promotedCount + buyGet - order.getQuantity();
         }
         return 0;
@@ -83,12 +83,12 @@ public class StockManager {
 
     private int getNoPromotionCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int stock = products.getPromotedQuantityByName(order.getName());
+        int promotionStock = products.getPromotedQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
 
         int promotionsToGet = getPromotionsToGet(order, buyGet, promotion.getBuy());
-        if (stock < promotionsToGet) {
-            return order.getQuantity() - (stock / buyGet) * buyGet;
+        if (promotionStock < promotionsToGet) {
+            return order.getQuantity() - (promotionStock / buyGet) * buyGet;
         }
         return 0;
     }
@@ -118,8 +118,8 @@ public class StockManager {
 
             Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
             int buyGet = promotion.getBuy() + promotion.getGet();
-            int stock = products.getPromotedQuantityByName(order.getName());
-            int freeCount = (Math.min(stock, order.getQuantity()) / buyGet) * promotion.getGet();
+            int promotionStock = products.getPromotedQuantityByName(order.getName());
+            int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
 
             if (freeCount != 0) {
                 freeProducts.put(order.getName(), freeCount);
