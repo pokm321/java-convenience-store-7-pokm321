@@ -3,7 +3,6 @@ package store.service;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import store.domain.Products;
@@ -15,7 +14,7 @@ public class PromotionTimerTest {
 
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
-    PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
+    PromotionTimer timer = new PromotionTimer(products, promotions);
 
     @Test
     void 프로모션_시간_체크_테스트() {

@@ -19,22 +19,24 @@ public class StoreController {
     private final Products products;
     private final Promotions promotions;
     private final Retrier retrier;
+    private final PromotionTimer timer;
+    private final PriceCalculator calculator;
+    private final StockManager manager;
     private Orders orders;
 
     public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions,
-                           Retrier retrier) {
+                           Retrier retrier, PromotionTimer timer, PriceCalculator calculator, StockManager manager) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.products = products;
         this.promotions = promotions;
         this.retrier = retrier;
+        this.timer = timer;
+        this.calculator = calculator;
+        this.manager = manager;
     }
 
     public void run() {
-        PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
-        PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
-        StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
-
         boolean isShopping = true;
         while (isShopping) {
             timer.setTime(DateTimes.now());

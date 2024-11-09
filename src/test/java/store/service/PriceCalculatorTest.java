@@ -2,7 +2,6 @@ package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import camp.nextstep.edu.missionutils.DateTimes;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -20,14 +19,14 @@ public class PriceCalculatorTest {
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
     Retrier retrier = new Retrier();
-    PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
+    PromotionTimer timer = new PromotionTimer(products, promotions);
     StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
     PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
 
     @Test
     void 총구매액_계산_테스트() {
         Orders orders = new Orders("[초코바-10],[사이다-9]", products);
-        PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
+        PromotionTimer timer = new PromotionTimer(products, promotions);
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         assertThat(calculator.getRawTotalPrice(orders)).isEqualTo(21000L);
     }

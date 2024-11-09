@@ -3,7 +3,6 @@ package store.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ public class StockManagerTest {
     Products products = new Products(MdPaths.PRODUCTS.getPath());
     Promotions promotions = new Promotions(MdPaths.PROMOTIONS.getPath());
     Retrier retrier = new Retrier();
-    PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
+    PromotionTimer timer = new PromotionTimer(products, promotions);
     StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
     @Test

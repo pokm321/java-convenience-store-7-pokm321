@@ -1,5 +1,6 @@
 package store.service;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import store.domain.Products;
@@ -14,10 +15,10 @@ public class PromotionTimer {
     private final Promotions promotions;
     private LocalDateTime dateTime;
 
-    public PromotionTimer(Products products, Promotions promotions, LocalDateTime dateTime) {
+    public PromotionTimer(Products products, Promotions promotions) {
         this.products = products;
         this.promotions = promotions;
-        this.dateTime = dateTime;
+        dateTime = DateTimes.now();
     }
 
     public void setTime(LocalDateTime dateTime) {
