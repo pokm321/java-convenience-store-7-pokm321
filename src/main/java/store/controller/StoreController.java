@@ -1,6 +1,7 @@
 package store.controller;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import java.util.Map;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
@@ -33,16 +34,19 @@ public class StoreController {
         outputView.printStock(products, promotions);
         retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
-        PriceCalculator calculator = new PriceCalculator(products, promotions);
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
+        PriceCalculator calculator = new PriceCalculator(products, promotions, timer);
         StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
         manager.askFreeAdditions(orders);
         manager.askNotEnoughPromotionStocks(orders);
+
         manager.deductOrders(orders);
 
-        System.out.println(calculator.getRawTotalPrice(orders));
-        outputView.printStock(products, promotions);
+        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
+                calculator.getPromotedDiscount(freeProducts), calculator.getMembershipDiscount(orders));
+
 
     }
 

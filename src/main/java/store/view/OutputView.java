@@ -1,8 +1,11 @@
 package store.view;
 
+import java.util.List;
+import java.util.Map;
 import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotions;
+import store.domain.input.Order;
 
 public class OutputView {
 
@@ -43,8 +46,18 @@ public class OutputView {
         System.out.println(ViewMessages.SPACE.getMessage() + promotion);
     }
 
-    public void printProducts() {
-        System.out.println("- 콜라 1,000원 10개 탄산2+1");
-        // ...
+    public void printReceipt(List<Order> orders, Products products, Map<String, Integer> freeProducts, long rawTotal,
+                             long promotionDiscount, long membershipDiscount) {
+        System.out.println("==============W 편의점================");
+        System.out.println("상품명\t\t\t수량\t금액");
+        orders.forEach(o -> System.out.printf("%s\t\t\t%,d\t%,d\n", o.getName(), o.getQuantity(),
+                products.getPriceByName(o.getName())));
+        System.out.println("=============증      정===============");
+        freeProducts.forEach((key, value) -> System.out.printf("%s\t\t\t%,d\n", key, value));
+        System.out.println("====================================");
+        System.out.printf("%s\t\t\t%,d\t%,d\n", "총구매액", orders.stream().mapToInt(Order::getQuantity).sum(), rawTotal);
+        System.out.printf("%s\t\t\t\t-%,d\n", "행사할인", promotionDiscount);
+        System.out.printf("%s\t\t\t\t-%,d\n", "멤버십할인", membershipDiscount);
+        System.out.printf("%s\t\t\t\t%,d\n", "내실돈", rawTotal - promotionDiscount - membershipDiscount);
     }
 }

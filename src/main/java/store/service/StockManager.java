@@ -121,7 +121,9 @@ public class StockManager {
             int stock = products.getPromotedQuantityByName(order.getName());
             int freeCount = (Math.min(stock, order.getQuantity()) / buyGet) * promotion.getGet();
 
-            freeProducts.put(order.getName(), freeCount);
+            if (freeCount != 0) {
+                freeProducts.put(order.getName(), freeCount);
+            }
         }
         return freeProducts;
     }
