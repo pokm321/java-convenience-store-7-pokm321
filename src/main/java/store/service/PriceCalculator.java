@@ -19,7 +19,6 @@ public class PriceCalculator {
     private static final float MEMBERSHIP_DISCOUNT_RATE = 0.3F;
     private static final int MAX_MEMBERSHIP_DISCOUNT = 8000;
 
-
     public PriceCalculator(InputView inputView, Products products, Promotions promotions, PromotionTimer timer,
                            Retrier retrier) {
         this.inputView = inputView;

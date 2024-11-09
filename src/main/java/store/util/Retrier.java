@@ -8,17 +8,6 @@ public class Retrier {
 
     OutputView outputView = new OutputView();
 
-    public void tryUntilSuccess(Runnable function) {
-        while (true) {
-            try {
-                function.run();
-                break;
-            } catch (IllegalArgumentException error) {
-                outputView.printError(error.getMessage());
-            }
-        }
-    }
-
     public <T> T tryUntilSuccess(Supplier<T> function) {
         while (true) {
             try {

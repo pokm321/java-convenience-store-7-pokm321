@@ -22,9 +22,8 @@ public class StockManager {
     private final PromotionTimer timer;
     private final Retrier retrier;
 
-    public StockManager(
-            InputView inputView, Products products, Promotions promotions, PromotionTimer timer, Retrier retrier
-    ) {
+    public StockManager(InputView inputView, Products products, Promotions promotions, PromotionTimer timer,
+                        Retrier retrier) {
         this.products = products;
         this.promotions = promotions;
         this.timer = timer;
@@ -63,14 +62,11 @@ public class StockManager {
         order.setQuantity(order.getQuantity() + freeCount);
     }
 
-    ///////////
-
     public void askNotEnoughPromotionStocks(Orders orders) {
         for (Order order : orders.getAll()) {
             askNotEnoughPromotionStock(order);
         }
     }
-
 
     private void askNotEnoughPromotionStock(Order order) {
         int noPromotionCount;
@@ -107,8 +103,6 @@ public class StockManager {
         order.setQuantity(order.getQuantity() - noPromotionCount);
     }
 
-    ///////////
-
     public Map<String, Integer> getFreeProducts(Orders orders) {
         Map<String, Integer> freeProducts = new HashMap<>();
         for (Order order : orders.getAll()) {
@@ -127,8 +121,6 @@ public class StockManager {
         }
         return freeProducts;
     }
-
-    ///////////
 
     public void deductOrders(Orders orders) {
         for (Order order : orders.getAll()) {

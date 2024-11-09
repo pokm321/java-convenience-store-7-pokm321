@@ -5,7 +5,7 @@ import camp.nextstep.edu.missionutils.Console;
 public class InputView {
 
     public String readItem() {
-        System.out.println(ViewMessages.ASK_ORDER.getMessage());
+        System.out.printf(ViewMessages.ASK_ORDER.getMessage());
         return Console.readLine();
     }
 
@@ -25,7 +25,7 @@ public class InputView {
     }
 
     public boolean isGoingAnotherShopping() {
-        System.out.println(ViewMessages.ASK_ANOTHER_ORDER.getMessage());
+        System.out.printf(ViewMessages.ASK_ANOTHER_ORDER.getMessage());
         return convertYesOrNo(Console.readLine());
     }
 
