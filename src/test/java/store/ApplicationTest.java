@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import store.view.InputErrors;
 
 class ApplicationTest extends NsTest {
     //    @Test
@@ -51,10 +54,10 @@ class ApplicationTest extends NsTest {
 //    }
 //
     @Test
-    void 예외_테스트() {
+    void 초과_수량_예외_테스트() {
         assertSimpleTest(() -> {
             runException("[컵라면-12]", "N", "N");
-            assertThat(output()).contains("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            assertThat(output()).contains(InputErrors.INVALID_QUANTITY.getMessage());
         });
     }
 
@@ -63,6 +66,15 @@ class ApplicationTest extends NsTest {
         assertSimpleTest(() -> {
             runException("[초코바-1],[콜라-2],[초코바-2]", "Y", "Y");
             assertThat(output()).contains("현재 콜라은(는) 1개를").contains("현재 초코바은(는) 1개를");
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"n", " Y", "\n", " ", "yes", "aaa", "_"})
+    void 잘못된_답변형식_예외_테스트(String answer) {
+        assertSimpleTest(() -> {
+            runException("[컵라면-5]", answer);
+            assertThat(output()).contains(InputErrors.OTHERS.getMessage());
         });
     }
 

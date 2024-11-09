@@ -17,17 +17,19 @@ public class StoreController {
     private final OutputView outputView;
     private final Products products;
     private final Promotions promotions;
+    private final Retrier retrier;
     private Orders orders;
 
-    public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions) {
+    public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions,
+                           Retrier retrier) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.products = products;
         this.promotions = promotions;
+        this.retrier = retrier;
     }
 
     public void run() {
-        Retrier retrier = new Retrier();
         outputView.printStock(products, promotions);
         retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 

@@ -20,9 +20,6 @@ public class StockManager {
     private final PromotionTimer timer;
     private final Retrier retrier;
 
-    private final String YES = "Y";
-    private final String NO = "N";
-
     public StockManager(
             InputView inputView, Products products, Promotions promotions, PromotionTimer timer, Retrier retrier
     ) {
