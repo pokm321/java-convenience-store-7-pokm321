@@ -1,7 +1,7 @@
 package store.service;
 
+import java.util.Map;
 import store.domain.Products;
-import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Orders;
 
@@ -21,24 +21,8 @@ public class PriceCalculator {
                 .sum();
     }
 
-    public long getPromotedDiscount(Orders orders, PromotionTimer timer) {
-        return orders.getAll().stream()
-                .mapToLong(order -> {
-                    if (!timer.isPromotionPeriod(order)) {
-                        return 0;
-                    }
-
-                    int orderPrice = order.getQuantity() * products.getPriceByName(order.getName());
-
-                    Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-                    int buyGet = promotion.getBuy() + promotion.getGet();
-
-                    orderPrice =
-                            orderPrice * promotion.getBuy() / (promotion.getBuy() + promotion.getGet());
-
-                    return orderPrice;
-                }).sum();
+    public long getPromotedDiscount(Map<String, Integer> freeProducts) {
+        return freeProducts.entrySet().stream()
+                .mapToLong(p -> (long) products.getPriceByName(p.getKey()) * p.getValue()).sum();
     }
-
-
 }
