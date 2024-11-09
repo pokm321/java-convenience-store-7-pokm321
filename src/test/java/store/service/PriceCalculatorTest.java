@@ -54,12 +54,12 @@ public class PriceCalculatorTest {
         System.setIn(new ByteArrayInputStream("Y\nY\nY".getBytes()));
 
         timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
-        assertThat(calculator.getMembershipDiscount(orders)).isEqualTo(8000L);
+        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(8000L);
 
         timer.setTime(LocalDateTime.parse("2024-05-08T01:20:30"));
-        assertThat(calculator.getMembershipDiscount(orders)).isEqualTo(7560L);
+        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(7560L);
 
         timer.setTime(LocalDateTime.parse("2024-11-08T01:20:30"));
-        assertThat(calculator.getMembershipDiscount(orders)).isEqualTo(5760L);
+        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(5760L);
     }
 }

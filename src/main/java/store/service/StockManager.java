@@ -1,9 +1,10 @@
 package store.service;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotion;
@@ -41,7 +42,7 @@ public class StockManager {
         int freeCount;
         if (timer.isPromotionPeriod(order) && (freeCount = getFreeCount(order)) > 0) {
             if (retrier.tryUntilSuccess(inputView::isAddingFree, order.getName(), freeCount)) {
-                addFreeToOrder(order, freeCount);
+                order.setQuantity(order.getQuantity() + freeCount);
             }
         }
     }
@@ -56,10 +57,6 @@ public class StockManager {
             return promotedCount + buyGet - order.getQuantity();
         }
         return 0;
-    }
-
-    private void addFreeToOrder(Order order, int freeCount) {
-        order.setQuantity(order.getQuantity() + freeCount);
     }
 
     public void askNotEnoughPromotionStocks(Orders orders) {
@@ -81,8 +78,8 @@ public class StockManager {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int promotionStock = products.getPromotedQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
-
         int promotionsToGet = getPromotionsToGet(order, buyGet, promotion.getBuy());
+
         if (promotionStock < promotionsToGet) {
             return order.getQuantity() - (promotionStock / buyGet) * buyGet;
         }
@@ -104,22 +101,20 @@ public class StockManager {
     }
 
     public Map<String, Integer> getFreeProducts(Orders orders) {
-        Map<String, Integer> freeProducts = new HashMap<>();
-        for (Order order : orders.getAll()) {
-            if (!timer.isPromotionPeriod(order)) {
-                continue;
-            }
+        return orders.getAll().stream()
+                .filter(timer::isPromotionPeriod)
+                .map(this::getFreeProduct)
+                .filter(entry -> entry.getValue() != 0)
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
 
-            Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-            int buyGet = promotion.getBuy() + promotion.getGet();
-            int promotionStock = products.getPromotedQuantityByName(order.getName());
-            int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
+    private Entry<String, Integer> getFreeProduct(Order order) {
+        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+        int buyGet = promotion.getBuy() + promotion.getGet();
+        int promotionStock = products.getPromotedQuantityByName(order.getName());
+        int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
 
-            if (freeCount != 0) {
-                freeProducts.put(order.getName(), freeCount);
-            }
-        }
-        return freeProducts;
+        return Map.entry(order.getName(), freeCount);
     }
 
     public void deductOrders(Orders orders) {

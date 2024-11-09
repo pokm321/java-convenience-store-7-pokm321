@@ -4,6 +4,7 @@ import java.util.Map;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
+import store.domain.input.Order;
 import store.domain.input.Orders;
 import store.util.Retrier;
 import store.view.InputView;
@@ -39,27 +40,31 @@ public class PriceCalculator {
                 .mapToLong(p -> (long) products.getPriceByName(p.getKey()) * p.getValue()).sum();
     }
 
-    public long getMembershipDiscount(Orders orders) {
+    public long askMembershipDiscount(Orders orders) {
         if (retrier.tryUntilSuccess(inputView::isMembership)) {
-            return (long) Math.min(getNoPromotionTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
+            return (long) Math.min(getMembershipCoveredTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
                     MAX_MEMBERSHIP_DISCOUNT);
         }
         return 0;
     }
 
-    private long getNoPromotionTotalPrice(Orders orders) {
-        return orders.getAll().stream().mapToInt(order -> {
+    private long getMembershipCoveredTotalPrice(Orders orders) {
+        return orders.getAll().stream().mapToLong(order -> {
             int price = products.getPriceByName(order.getName());
             if (!timer.isPromotionPeriod(order)) {
-                return order.getQuantity() * price;
+                return (long) order.getQuantity() * price;
             }
 
-            Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-            int buyGet = promotion.getBuy() + promotion.getGet();
-            int stock = products.getPromotedQuantityByName(order.getName());
-            int promotedCount = (Math.min(stock, order.getQuantity()) / buyGet) * buyGet;
-
-            return (order.getQuantity() - promotedCount) * price;
+            return getMembershipCoveredPrice(order, price);
         }).sum();
+    }
+
+    private long getMembershipCoveredPrice(Order order, int price) {
+        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+        int buyGet = promotion.getBuy() + promotion.getGet();
+        int stock = products.getPromotedQuantityByName(order.getName());
+        int promotedCount = (Math.min(stock, order.getQuantity()) / buyGet) * buyGet;
+
+        return (long) (order.getQuantity() - promotedCount) * price;
     }
 }

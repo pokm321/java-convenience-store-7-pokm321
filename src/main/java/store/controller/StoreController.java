@@ -40,20 +40,31 @@ public class StoreController {
         boolean isShopping = true;
         while (isShopping) {
             timer.setTime(DateTimes.now());
-            outputView.printStock(products, promotions);
-            retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
-            manager.askFreeAdditions(orders);
-            manager.askNotEnoughPromotionStocks(orders);
+            getOrders();
+            adjustOrders();
+            processOrders();
 
-            Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
-            outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
-                    calculator.getPromotionDiscount(freeProducts), calculator.getMembershipDiscount(orders));
-
-            manager.deductOrders(orders);
             isShopping = retrier.tryUntilSuccess(inputView::isGoingAnotherShopping);
         }
+    }
 
+    private void getOrders() {
+        outputView.printStock(products, promotions);
+        orders = retrier.tryUntilSuccess(() -> new Orders(inputView.readItem(), products));
+    }
+
+    private void adjustOrders() {
+        manager.askFreeAdditions(orders);
+        manager.askNotEnoughPromotionStocks(orders);
+    }
+
+    private void processOrders() {
+        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+        outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
+                calculator.getPromotionDiscount(freeProducts), calculator.askMembershipDiscount(orders));
+
+        manager.deductOrders(orders);
     }
 
 }
