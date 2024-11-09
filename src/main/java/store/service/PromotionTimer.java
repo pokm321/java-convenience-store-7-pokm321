@@ -12,11 +12,15 @@ public class PromotionTimer {
 
     private final Products products;
     private final Promotions promotions;
-    private final LocalDateTime dateTime;
+    private LocalDateTime dateTime;
 
     public PromotionTimer(Products products, Promotions promotions, LocalDateTime dateTime) {
         this.products = products;
         this.promotions = promotions;
+        this.dateTime = dateTime;
+    }
+
+    public void setTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

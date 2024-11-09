@@ -24,6 +24,11 @@ public class InputView {
         return convertYesOrNo(Console.readLine());
     }
 
+    public boolean isGoingAnotherShopping() {
+        System.out.println(ViewMessages.ASK_ANOTHER_ORDER.getMessage());
+        return convertYesOrNo(Console.readLine());
+    }
+
     private boolean convertYesOrNo(String input) {
         if (input.equals(ViewMessages.YES.getMessage())) {
             return true;

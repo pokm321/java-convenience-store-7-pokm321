@@ -31,21 +31,26 @@ public class StoreController {
     }
 
     public void run() {
-        outputView.printStock(products, promotions);
-        retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
-
         PromotionTimer timer = new PromotionTimer(products, promotions, DateTimes.now());
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         StockManager manager = new StockManager(inputView, products, promotions, timer, retrier);
 
-        manager.askFreeAdditions(orders);
-        manager.askNotEnoughPromotionStocks(orders);
-        manager.deductOrders(orders);
+        boolean isShopping = true;
+        while (isShopping) {
+            timer.setTime(DateTimes.now());
+            outputView.printStock(products, promotions);
+            retrier.tryUntilSuccess(() -> orders = new Orders(inputView.readItem(), products));
 
-        Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
-        outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
-                calculator.getPromotedDiscount(freeProducts), calculator.getMembershipDiscount(orders));
+            manager.askFreeAdditions(orders);
+            manager.askNotEnoughPromotionStocks(orders);
+            manager.deductOrders(orders);
 
+            Map<String, Integer> freeProducts = manager.getFreeProducts(orders);
+            outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
+                    calculator.getPromotedDiscount(freeProducts), calculator.getMembershipDiscount(orders));
+
+            isShopping = inputView.isGoingAnotherShopping();
+        }
 
     }
 
