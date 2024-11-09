@@ -51,7 +51,7 @@ public class OutputView {
         System.out.println("==============W 편의점================");
         System.out.println("상품명\t\t\t수량\t금액");
         orders.forEach(o -> System.out.printf("%s\t\t\t%,d\t%,d\n", o.getName(), o.getQuantity(),
-                products.getPriceByName(o.getName())));
+                o.getQuantity() * products.getPriceByName(o.getName())));
         System.out.println("=============증      정===============");
         freeProducts.forEach((key, value) -> System.out.printf("%s\t\t\t%,d\n", key, value));
         System.out.println("====================================");
