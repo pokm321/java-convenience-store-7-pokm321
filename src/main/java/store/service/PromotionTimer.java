@@ -6,6 +6,7 @@ import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
+import store.util.md.MdKeywords;
 
 public class PromotionTimer {
 
@@ -20,7 +21,11 @@ public class PromotionTimer {
     }
 
     public boolean isPromotionPeriod(Order order) {
-        Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
+        String promotionName = products.getPromotionNameByName(order.getName());
+        if (promotionName.equals(MdKeywords.NULL.getValue())) {
+            return false;
+        }
+        Promotion promotion = promotions.getPromotion(promotionName);
 
         LocalDateTime startDate = LocalDate.parse(promotion.getStartDate()).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(promotion.getEndDate()).atStartOfDay().plusDays(1);
