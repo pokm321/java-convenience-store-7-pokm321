@@ -83,7 +83,7 @@ public class StoreController {
 
     private void processOrders() {
         Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
-        outputView.printReceipt(orders.getAll(), products, freeProducts, calculator.getRawTotalPrice(orders),
+        outputView.printReceipt(orders, products, freeProducts, calculator.getRawTotalPrice(orders),
                 calculator.getPromotionDiscount(freeProducts), calculator.askMembershipDiscount(orders));
 
         deductor.deductOrders(orders);

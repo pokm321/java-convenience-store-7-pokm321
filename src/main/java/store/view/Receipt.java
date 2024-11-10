@@ -2,7 +2,7 @@ package store.view;
 
 public enum Receipt {
 
-    HEADER_RECEIPT("=============W 편의점==============="),
+    HEADER_RECEIPT(System.lineSeparator() + "=============W 편의점==============="),
     HEADER_PRODUCTS("상품명              수량        금액"),
 
     HEADER_FREE_PRODUCTS("=============증    정==============="),
