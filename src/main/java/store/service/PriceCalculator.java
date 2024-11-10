@@ -62,7 +62,7 @@ public class PriceCalculator {
     private long getMembershipCoveredPrice(Order order, long price) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int buyGet = promotion.getBuy() + promotion.getGet();
-        int stock = products.getPromotedQuantityByName(order.getName());
+        int stock = products.getPromotionQuantityByName(order.getName());
         int promotedCount = (Math.min(stock, order.getQuantity()) / buyGet) * buyGet;
 
         return (order.getQuantity() - promotedCount) * price;

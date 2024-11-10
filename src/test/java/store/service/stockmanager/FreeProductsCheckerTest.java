@@ -21,11 +21,11 @@ public class FreeProductsCheckerTest {
     MdReader reader = new MdReader();
     PromotionTimer timer = new PromotionTimer(products, promotions);
     FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
-    
+
     @BeforeEach
     void setup() {
-        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
-        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getText());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getText());
     }
 
     @Test

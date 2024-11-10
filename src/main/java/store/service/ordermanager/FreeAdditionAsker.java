@@ -43,7 +43,7 @@ public class FreeAdditionAsker {
 
     private int getFreeCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int promotionStock = products.getPromotedQuantityByName(order.getName());
+        int promotionStock = products.getPromotionQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotedCount = (order.getQuantity() / buyGet) * buyGet;
 

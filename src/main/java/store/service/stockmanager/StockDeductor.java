@@ -40,12 +40,12 @@ public class StockDeductor {
     private List<Product> sortByPromotion(List<Product> products, boolean isPromotion) {
         if (isPromotion) {
             return products.stream().sorted(Comparator.comparing(product ->
-                    product.getPromotion().equals(MdKeywords.NULL.getValue())
+                    product.getPromotion().equals(MdKeywords.NULL.getText())
             )).toList(); // 프로모션 기간중엔 프로모션 재고가 앞에 오도록
         }
 
         return products.stream().sorted(Comparator.comparing(product ->
-                !product.getPromotion().equals(MdKeywords.NULL.getValue())
+                !product.getPromotion().equals(MdKeywords.NULL.getText())
         )).toList(); // 프로모션 기간이 아닐땐 일반 재고가 앞에 오도록
     }
 }

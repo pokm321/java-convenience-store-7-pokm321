@@ -35,16 +35,16 @@ public class NonPromotionAsker {
 
     private void askNotEnoughPromotionStock(Order order) {
         int noPromotionCount;
-        if (timer.isPromotionPeriod(order) && (noPromotionCount = getNoPromotionCount(order)) > 0) {
+        if (timer.isPromotionPeriod(order) && (noPromotionCount = getNonPromotionCount(order)) > 0) {
             if (!retrier.tryUntilSuccess(inputView::isGoingNoPromotionPrice, order.getName(), noPromotionCount)) {
                 order.setQuantity(order.getQuantity() - noPromotionCount);
             }
         }
     }
 
-    private int getNoPromotionCount(Order order) {
+    private int getNonPromotionCount(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
-        int promotionStock = products.getPromotedQuantityByName(order.getName());
+        int promotionStock = products.getPromotionQuantityByName(order.getName());
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotionsToGet = getPromotionsToGet(order, buyGet, promotion.getBuy());
 

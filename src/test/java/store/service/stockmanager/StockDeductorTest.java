@@ -23,8 +23,8 @@ public class StockDeductorTest {
 
     @BeforeEach
     void setup() {
-        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
-        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getText());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getText());
     }
 
     @Test
@@ -36,11 +36,11 @@ public class StockDeductorTest {
         timer.setTime(LocalDateTime.parse("2024-05-05T23:59:59"));
         deductor.deductOrders(orders);
 
-        assertThat(products.getNullProductsByName("초코바").getFirst().getQuantity()).isEqualTo(4);
-        assertThat(products.getPromotedProductsByName("초코바").getFirst().getQuantity()).isEqualTo(0);
+        assertThat(products.getNonPromotionProductsByName("초코바").getFirst().getQuantity()).isEqualTo(4);
+        assertThat(products.getPromotionProductsByName("초코바").getFirst().getQuantity()).isEqualTo(0);
 
-        assertThat(products.getNullProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(2);
-        assertThat(products.getPromotedProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(5);
+        assertThat(products.getNonPromotionProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(2);
+        assertThat(products.getPromotionProductsByName("감자칩").getFirst().getQuantity()).isEqualTo(5);
     }
 
 }

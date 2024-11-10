@@ -52,20 +52,20 @@ public class Products {
                 fields.get(INDEX_PROMOTION)));
 
         if (isPromotionedProduct(fields)) {
-            addNormalProductWithZeroQuantity(fields);
+            addNonPromotionProductWithZeroQuantity(fields);
         }
     }
 
     private boolean isPromotionedProduct(List<String> fields) {
-        return !fields.get(INDEX_PROMOTION).equals(MdKeywords.NULL.getValue());
+        return !fields.get(INDEX_PROMOTION).equals(MdKeywords.NULL.getText());
     }
 
-    private void addNormalProductWithZeroQuantity(List<String> fields) {
+    private void addNonPromotionProductWithZeroQuantity(List<String> fields) {
         listOfProducts.add(new Product(
                 fields.get(INDEX_NAME),
                 Long.parseLong(fields.get(INDEX_PRICE)),
                 0,
-                MdKeywords.NULL.getValue()));
+                MdKeywords.NULL.getText()));
     }
 
     private void validate(String line) {
@@ -113,10 +113,10 @@ public class Products {
     }
 
     public String getPromotionNameByName(String name) {
-        List<Product> promotedProducts = getPromotedProductsByName(name);
+        List<Product> promotedProducts = getPromotionProductsByName(name);
 
         if (promotedProducts.isEmpty()) {
-            return MdKeywords.NULL.getValue();
+            return MdKeywords.NULL.getText();
         }
 
         return promotedProducts.getFirst().getPromotion();
@@ -126,22 +126,22 @@ public class Products {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).toList();
     }
 
-    public List<Product> getNullProductsByName(String name) {
+    public List<Product> getNonPromotionProductsByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name))
-                .filter(p -> p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+                .filter(p -> p.getPromotion().equals(MdKeywords.NULL.getText())).toList();
     }
 
-    public List<Product> getPromotedProductsByName(String name) {
+    public List<Product> getPromotionProductsByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name))
-                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getValue())).toList();
+                .filter(p -> !p.getPromotion().equals(MdKeywords.NULL.getText())).toList();
     }
 
     public int getQuantityByName(String name) {
         return getProductsByName(name).stream().mapToInt(Product::getQuantity).sum();
     }
 
-    public int getPromotedQuantityByName(String name) {
-        return getPromotedProductsByName(name).stream().mapToInt(Product::getQuantity).sum();
+    public int getPromotionQuantityByName(String name) {
+        return getPromotionProductsByName(name).stream().mapToInt(Product::getQuantity).sum();
     }
 
     public long getPriceByName(String name) {

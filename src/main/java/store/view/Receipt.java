@@ -15,15 +15,25 @@ public enum Receipt {
 
     COLUMN_FORMAT_ALL_THREE("%s%,-5d%,11d\n"),
     COLUMN_FORMAT_FIRST_THIRD("%s%,16d\n"),
-    COLUMN_FORMAT_FIRST_SECOND("%s%,d\n");
+    COLUMN_FORMAT_FIRST_SECOND("%s%,d\n"),
+    FIRST_COLUMN_LENGTH(20);
 
-    private final String value;
+    private String text;
+    private int number;
 
-    Receipt(String value) {
-        this.value = value;
+    Receipt(String text) {
+        this.text = text;
     }
 
-    public String getValue() {
-        return value;
+    Receipt(int number) {
+        this.number = number;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getNumber() {
+        return number;
     }
 }

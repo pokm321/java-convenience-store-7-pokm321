@@ -27,7 +27,7 @@ public class PromotionTimer {
 
     public boolean isPromotionPeriod(Order order) {
         String promotionName = products.getPromotionNameByName(order.getName());
-        if (promotionName.equals(MdKeywords.NULL.getValue())) {
+        if (promotionName.equals(MdKeywords.NULL.getText())) {
             return false;
         }
         Promotion promotion = promotions.getPromotion(promotionName);

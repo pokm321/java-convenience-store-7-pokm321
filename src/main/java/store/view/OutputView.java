@@ -7,13 +7,11 @@ import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Order;
+import store.util.md.MdKeywords;
 
 public class OutputView {
 
-    private static final String NO_PROMOTION_MD = "null";
-    private static final int NO_QUANTITY_MD = 0;
     private static final String KOREAN_ENCODING = "euc-kr";
-    private static final int FIRST_COLUMN_OF_RECEIPT_LENGTH = 20;
 
     public void printError(String message) {
         System.out.println(message);
@@ -34,7 +32,7 @@ public class OutputView {
     }
 
     private void printQuantity(int quantity) {
-        if (quantity == NO_QUANTITY_MD) {
+        if (quantity == MdKeywords.NO_QUANTITY.getNumber()) {
             System.out.print(ViewMessages.NO_QUANTITY_OUTPUT.getMessage());
             return;
         }
@@ -42,7 +40,7 @@ public class OutputView {
     }
 
     private void printPromotion(String promotion) {
-        if (promotion.equals(NO_PROMOTION_MD)) {
+        if (promotion.equals(MdKeywords.NULL.getText())) {
             System.out.println();
             return;
         }
@@ -57,33 +55,33 @@ public class OutputView {
     }
 
     private void printProducts(List<Order> orders, Products products) {
-        System.out.println(Receipt.HEADER_RECEIPT.getValue());
-        System.out.println(Receipt.HEADER_PRODUCTS.getValue());
-        orders.forEach(o -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getValue(),
-                parseKoreanToLength(o.getName(), FIRST_COLUMN_OF_RECEIPT_LENGTH), o.getQuantity(),
+        System.out.println(Receipt.HEADER_RECEIPT.getText());
+        System.out.println(Receipt.HEADER_PRODUCTS.getText());
+        orders.forEach(o -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
+                parseKoreanToLength(o.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), o.getQuantity(),
                 o.getQuantity() * products.getPriceByName(o.getName())));
     }
 
     private void printFreeProducts(Map<String, Integer> freeProducts) {
-        System.out.println(Receipt.HEADER_FREE_PRODUCTS.getValue());
-        freeProducts.forEach((key, value) -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getValue(),
-                parseKoreanToLength(key, FIRST_COLUMN_OF_RECEIPT_LENGTH), value));
+        System.out.println(Receipt.HEADER_FREE_PRODUCTS.getText());
+        freeProducts.forEach((key, value) -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getText(),
+                parseKoreanToLength(key, Receipt.FIRST_COLUMN_LENGTH.getNumber()), value));
     }
 
     private void printFooter(List<Order> orders, long rawTotal, long promotionDiscount, long membershipDiscount) {
-        System.out.println(Receipt.FOOTER_RECEIPT.getValue());
-        System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getValue(),
-                parseKoreanToLength(Receipt.ROW_TOTAL_PRICE.getValue(), FIRST_COLUMN_OF_RECEIPT_LENGTH),
+        System.out.println(Receipt.FOOTER_RECEIPT.getText());
+        System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
+                parseKoreanToLength(Receipt.ROW_TOTAL_PRICE.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 orders.stream().mapToInt(Order::getQuantity).sum(),
                 rawTotal);
-        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getValue(),
-                parseKoreanToLength(Receipt.ROW_PROMOTION_DISCOUNT.getValue(), FIRST_COLUMN_OF_RECEIPT_LENGTH),
+        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
+                parseKoreanToLength(Receipt.ROW_PROMOTION_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 promotionDiscount * -1);
-        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getValue(),
-                parseKoreanToLength(Receipt.ROW_MEMBERSHIP_DISCOUNT.getValue(), FIRST_COLUMN_OF_RECEIPT_LENGTH),
+        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
+                parseKoreanToLength(Receipt.ROW_MEMBERSHIP_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 membershipDiscount * -1);
-        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getValue(),
-                parseKoreanToLength(Receipt.ROW_PAYMENT.getValue(), FIRST_COLUMN_OF_RECEIPT_LENGTH),
+        System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
+                parseKoreanToLength(Receipt.ROW_PAYMENT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 rawTotal - promotionDiscount - membershipDiscount);
     }
 

@@ -18,8 +18,8 @@ public class PromotionsTest {
 
     @BeforeEach
     void setup() {
-        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
-        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getText());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getText());
     }
 
     @Test

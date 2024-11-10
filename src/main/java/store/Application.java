@@ -31,8 +31,7 @@ public class Application {
         StockDeductor deductor = new StockDeductor(products, timer);
 
         StoreController controller = new StoreController(inputView, outputView, reader, products, promotions, retrier,
-                timer,
-                calculator, freeAdditionAsker, nonPromotionAsker, freeProductsChecker, deductor);
+                timer, calculator, freeAdditionAsker, nonPromotionAsker, freeProductsChecker, deductor);
 
         controller.run();
     }

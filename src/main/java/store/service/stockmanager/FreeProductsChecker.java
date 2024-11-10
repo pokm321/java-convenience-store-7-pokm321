@@ -34,7 +34,7 @@ public class FreeProductsChecker {
     private Entry<String, Integer> getFreeProduct(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int buyGet = promotion.getBuy() + promotion.getGet();
-        int promotionStock = products.getPromotedQuantityByName(order.getName());
+        int promotionStock = products.getPromotionQuantityByName(order.getName());
         int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
 
         return Map.entry(order.getName(), freeCount);

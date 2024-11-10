@@ -21,10 +21,10 @@ public class PromotionTimerTest {
 
     @BeforeEach
     void setup() {
-        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
-        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getText());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getText());
     }
-    
+
     @Test
     void 프로모션_시간_체크_테스트() {
         Order order = new Order("사이다", 5, products);
