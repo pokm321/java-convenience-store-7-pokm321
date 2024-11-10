@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.util.md.MdErrors;
 import store.util.md.MdKeywords;
-import store.view.InputErrors;
+import store.view.ViewErrors;
 
 public class Products {
 

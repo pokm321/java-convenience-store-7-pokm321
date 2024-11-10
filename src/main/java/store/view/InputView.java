@@ -36,6 +36,6 @@ public class InputView {
         if (input.equals(ViewMessages.NO.getMessage())) {
             return false;
         }
-        throw new IllegalArgumentException(InputErrors.OTHERS.getMessage());
+        throw new IllegalArgumentException(ViewErrors.OTHERS.getMessage());
     }
 }

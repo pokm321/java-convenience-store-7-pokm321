@@ -20,7 +20,7 @@ public enum ViewMessages {
             + " (" + YES.getMessage() + "/" + NO.getMessage() + ")" + System.lineSeparator()),
     ASK_ANOTHER_ORDER("감사합니다. 구매하고 싶은 다른 상품이 있나요?"
             + " (" + YES.getMessage() + "/" + NO.getMessage() + ")" + System.lineSeparator());
-
+    
     private final String message;
 
     ViewMessages(String message) {

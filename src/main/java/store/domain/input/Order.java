@@ -1,7 +1,7 @@
 package store.domain.input;
 
 import store.domain.Products;
-import store.view.InputErrors;
+import store.view.ViewErrors;
 
 public class Order {
 
@@ -22,13 +22,13 @@ public class Order {
 
     private void validateNameExists(String name, Products products) {
         if (products.getProductsByName(name).isEmpty()) {
-            throw new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_NAME.getMessage());
         }
     }
 
     private void validateQuantityEnough(String name, int quantity, Products products) {
         if (products.getQuantityByName(name) < quantity) {
-            throw new IllegalArgumentException(InputErrors.INVALID_QUANTITY.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_QUANTITY.getMessage());
         }
     }
 

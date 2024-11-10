@@ -1,13 +1,15 @@
 package store;
 
+import static camp.nextstep.edu.missionutils.test.Assertions.assertNowTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import store.view.InputErrors;
+import store.view.ViewErrors;
 
 class ApplicationTest extends NsTest {
     //    @Test
@@ -45,19 +47,31 @@ class ApplicationTest extends NsTest {
 //        });
 //    }
 //
-//    @Test
-//    void 기간에_해당하지_않는_프로모션_적용() {
-//        assertNowTest(() -> {
-//            run("[감자칩-2]", "N", "N");
-//            assertThat(output().replaceAll("\\s", "")).contains("내실돈3,000");
-//        }, LocalDate.of(2024, 2, 1).atStartOfDay());
-//    }
-//
+    @Test
+    void 기간에_해당하지_않는_프로모션_적용() {
+        assertNowTest(() -> {
+            run("[감자칩-2]", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈3,000");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    //
+    @Test
+    void 영수증_출력_테스트() {
+        assertSimpleTest(() -> {
+            runException("[콜라-3],[에너지바-5],[사이다-10]", "Y", "Y");
+            assertThat(output().replaceAll("\\s", ""))
+                    .contains("행사할인-3,000")
+                    .contains("멤버십할인-4,200")
+                    .contains("내실돈15,800");
+        });
+    }
+
     @Test
     void 초과_수량_예외_테스트() {
         assertSimpleTest(() -> {
             runException("[컵라면-12]", "N", "N");
-            assertThat(output()).contains(InputErrors.INVALID_QUANTITY.getMessage());
+            assertThat(output()).contains(ViewErrors.INVALID_QUANTITY.getMessage());
         });
     }
 
@@ -74,7 +88,7 @@ class ApplicationTest extends NsTest {
     void 잘못된_답변형식_예외_테스트(String answer) {
         assertSimpleTest(() -> {
             runException("[컵라면-5]", answer);
-            assertThat(output()).contains(InputErrors.OTHERS.getMessage());
+            assertThat(output()).contains(ViewErrors.OTHERS.getMessage());
         });
     }
 

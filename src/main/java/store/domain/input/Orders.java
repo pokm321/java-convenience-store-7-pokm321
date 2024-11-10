@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import store.domain.Products;
-import store.view.InputErrors;
+import store.view.ViewErrors;
 
 public class Orders {
 
@@ -57,30 +57,30 @@ public class Orders {
 
     private void validateNotNull(String rawOrders) {
         if (rawOrders == null) {
-            throw new IllegalArgumentException(InputErrors.OTHERS.getMessage());
+            throw new IllegalArgumentException(ViewErrors.OTHERS.getMessage());
         }
     }
 
     private void validateNotEmpty(String rawOrders) {
         if (rawOrders.isBlank()) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
 
         if (Arrays.stream(rawOrders.split(COMMA)).anyMatch(String::isBlank)) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
     }
 
     private void validateBrackets(String order) {
         if (order.charAt(0) != LEFT_BRACKET || order.charAt(order.length() - 1) != RIGHT_BRACKET) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
 
     }
 
     private void validateHyphen(String order) {
         if (order.replace(HYPHEN, "").length() + 1 != order.length()) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
     }
 
@@ -89,13 +89,13 @@ public class Orders {
 
             Integer.parseInt(getFields(order).get(1));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
     }
 
     private void validateRange(String order) {
         if (Integer.parseInt(getFields(order).get(1)) <= MIN_QUANTITY) {
-            throw new IllegalArgumentException(InputErrors.INVALID_FORMAT.getMessage());
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
     }
 
