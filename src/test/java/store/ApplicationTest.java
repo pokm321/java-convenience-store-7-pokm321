@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import store.view.ViewErrors;
+import store.view.ViewMessages;
 
 class ApplicationTest extends NsTest {
     @Test
@@ -48,6 +49,14 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 재주문시_재고_테스트() {
+        assertSimpleTest(() -> {
+            runException("[컵라면-10]", "Y", "Y", "Y", "[컵라면-10]");
+            assertThat(output()).contains(ViewErrors.INVALID_QUANTITY.getMessage());
+        });
+    }
+
+    @Test
     void 기간에_해당하지_않는_프로모션_적용() {
         assertNowTest(() -> {
             run("[감자칩-2]", "N", "N");
@@ -55,7 +64,7 @@ class ApplicationTest extends NsTest {
         }, LocalDate.of(2024, 2, 1).atStartOfDay());
     }
 
-    //
+
     @Test
     void 영수증_출력_테스트() {
         assertSimpleTest(() -> {
@@ -78,8 +87,9 @@ class ApplicationTest extends NsTest {
     @Test
     void 프로모션_무료_상품_추가_테스트() {
         assertSimpleTest(() -> {
-            runException("[초코바-1],[콜라-2],[초코바-2]", "Y", "Y");
-            assertThat(output()).contains("현재 콜라은(는) 1개를").contains("현재 초코바은(는) 1개를");
+            runException("[초코바-1],[콜라-5],[초코바-2]", "Y", "Y");
+            assertThat(output()).contains(String.format(ViewMessages.ADD_PROMOTED_PRODUCT.getMessage(), "콜라", 1))
+                    .contains(String.format(ViewMessages.ADD_PROMOTED_PRODUCT.getMessage(), "초코바", 1));
         });
     }
 

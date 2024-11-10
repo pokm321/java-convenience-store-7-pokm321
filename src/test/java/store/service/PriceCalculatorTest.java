@@ -2,6 +2,7 @@ package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import camp.nextstep.edu.missionutils.Console;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class PriceCalculatorTest {
     @Test
     void 멤버십할인_계산_테스트() {
         Orders orders = new Orders("[초코바-10],[사이다-9],[감자칩-10]", products);
+        Console.close();
         System.setIn(new ByteArrayInputStream("Y\nY\nY".getBytes()));
 
         timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
