@@ -1,12 +1,11 @@
 package store.view;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotions;
-import store.domain.input.Order;
+import store.domain.input.Orders;
 import store.util.md.MdKeywords;
 
 public class OutputView {
@@ -21,14 +20,11 @@ public class OutputView {
         System.out.printf(ViewMessages.WELCOME.getMessage());
 
         for (Product product : products.getAll()) {
-            System.out.printf(ViewMessages.ITEM_INFO.getMessage(),
-                    product.getName(), product.getPrice());
+            System.out.printf(ViewMessages.ITEM_INFO.getMessage(), product.getName(), product.getPrice());
 
             printQuantity(product.getQuantity());
             printPromotion(product.getPromotion());
         }
-
-        System.out.println();
     }
 
     private void printQuantity(int quantity) {
@@ -47,60 +43,81 @@ public class OutputView {
         System.out.println(ViewMessages.SPACE.getMessage() + promotion);
     }
 
-    public void printReceipt(List<Order> orders, Products products, Map<String, Integer> freeProducts, long rawTotal,
+    public void printReceipt(Orders orders, Products products, Map<String, Integer> freeProducts, long rawTotal,
                              long promotionDiscount, long membershipDiscount) {
         printProducts(orders, products);
         printFreeProducts(freeProducts);
         printFooter(orders, rawTotal, promotionDiscount, membershipDiscount);
     }
 
-    private void printProducts(List<Order> orders, Products products) {
+    private void printProducts(Orders orders, Products products) {
         System.out.println(Receipt.HEADER_RECEIPT.getText());
         System.out.println(Receipt.HEADER_PRODUCTS.getText());
-        orders.forEach(o -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
-                parseKoreanToLength(o.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), o.getQuantity(),
+        orders.getAll().forEach(o -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
+                parseToLength(o.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), o.getQuantity(),
                 o.getQuantity() * products.getPriceByName(o.getName())));
     }
 
     private void printFreeProducts(Map<String, Integer> freeProducts) {
         System.out.println(Receipt.HEADER_FREE_PRODUCTS.getText());
         freeProducts.forEach((key, value) -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getText(),
-                parseKoreanToLength(key, Receipt.FIRST_COLUMN_LENGTH.getNumber()), value));
+                parseToLength(key, Receipt.FIRST_COLUMN_LENGTH.getNumber()), value));
     }
 
-    private void printFooter(List<Order> orders, long rawTotal, long promotionDiscount, long membershipDiscount) {
+    private void printFooter(Orders orders, long rawTotal, long promotionDiscount, long membershipDiscount) {
         System.out.println(Receipt.FOOTER_RECEIPT.getText());
+        printRawTotal(orders, rawTotal);
+        printPromotionDiscount(promotionDiscount);
+        printMembershipDiscount(membershipDiscount);
+        printPayment(rawTotal, promotionDiscount, membershipDiscount);
+    }
+
+    private void printRawTotal(Orders orders, long rawTotal) {
         System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
-                parseKoreanToLength(Receipt.ROW_TOTAL_PRICE.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                orders.stream().mapToInt(Order::getQuantity).sum(),
+                parseToLength(Receipt.ROW_TOTAL_PRICE.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
+                orders.getTotalQuantity(),
                 rawTotal);
+    }
+
+    private void printPromotionDiscount(long promotionDiscount) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
-                parseKoreanToLength(Receipt.ROW_PROMOTION_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
+                parseToLength(Receipt.ROW_PROMOTION_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 promotionDiscount * -1);
+    }
+
+    private void printMembershipDiscount(long membershipDiscount) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
-                parseKoreanToLength(Receipt.ROW_MEMBERSHIP_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
+                parseToLength(Receipt.ROW_MEMBERSHIP_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 membershipDiscount * -1);
+    }
+
+    private void printPayment(long rawTotal, long promotionDiscount, long membershipDiscount) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
-                parseKoreanToLength(Receipt.ROW_PAYMENT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
+                parseToLength(Receipt.ROW_PAYMENT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
                 rawTotal - promotionDiscount - membershipDiscount);
     }
 
-    private String parseKoreanToLength(String rawText, int desiredLength) {
+    private String parseToLength(String rawText, int desiredLength) {
+        StringBuilder text = new StringBuilder(rawText);
+        while (getTextBytes(text) > desiredLength) {
+            text.deleteCharAt(text.length() - 1);
+        }
+
+        while (getTextBytes(text) < desiredLength) {
+            text.append(ViewMessages.SPACE.getMessage());
+        }
+
+        return text.toString();
+    }
+
+    private int getTextBytes(StringBuilder text) {
         try {
-            StringBuilder text = new StringBuilder(rawText);
-            while (text.toString().getBytes(KOREAN_ENCODING).length > desiredLength) {
-                text.deleteCharAt(text.length() - 1);
-            }
-
-            while (text.toString().getBytes(KOREAN_ENCODING).length < desiredLength) {
-                text.append(ViewMessages.SPACE.getMessage());
-            }
-
-            return text.toString();
+            return text.toString().getBytes(KOREAN_ENCODING).length;
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(ViewErrors.INVALID_ENCODING.getMessage());
         }
     }
+
 
 }
 
