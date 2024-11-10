@@ -3,6 +3,8 @@
 편의점 결제 시스템을 구현합니다.  
 구매자의 할인 혜택과 재고 상황을 고려하여 최종 결제 금액을 계산하고, 영수증을 출력합니다.
 
+
+<img width="256" src="https://github.com/user-attachments/assets/838185bc-e48f-4fe3-898b-77fcdea003c1">
 <br>
 
 ## 기능구현
