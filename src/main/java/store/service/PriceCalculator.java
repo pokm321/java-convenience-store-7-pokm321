@@ -37,12 +37,13 @@ public class PriceCalculator {
 
     public long getPromotionDiscount(Map<String, Integer> freeProducts) {
         return freeProducts.entrySet().stream()
-                .mapToLong(p -> (long) products.getPriceByName(p.getKey()) * p.getValue()).sum();
+                .mapToLong(p -> products.getPriceByName(p.getKey()) * p.getValue()).sum();
     }
 
     public long askMembershipDiscount(Orders orders) {
         if (retrier.tryUntilSuccess(inputView::isMembership)) {
-            return (long) Math.min(getMembershipCoveredTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
+            return (long) Math.min(
+                    getMembershipCoveredTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
                     MAX_MEMBERSHIP_DISCOUNT);
         }
         return 0;

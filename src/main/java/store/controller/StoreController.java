@@ -34,8 +34,7 @@ public class StoreController {
     private Orders orders;
 
     public StoreController(InputView inputView, OutputView outputView, MdReader reader, Products products,
-                           Promotions promotions,
-                           Retrier retrier, PromotionTimer timer, PriceCalculator calculator,
+                           Promotions promotions, Retrier retrier, PromotionTimer timer, PriceCalculator calculator,
                            FreeAdditionAsker freeAsker, NonPromotionAsker nonPromotionAsker,
                            FreeProductsChecker freeProductsChecker, StockDeductor deductor) {
         this.inputView = inputView;
@@ -53,8 +52,7 @@ public class StoreController {
     }
 
     public void run() {
-        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
-        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+        readMdFiles();
 
         boolean isShopping = true;
         while (isShopping) {
@@ -66,6 +64,11 @@ public class StoreController {
 
             isShopping = retrier.tryUntilSuccess(inputView::isGoingAnotherShopping);
         }
+    }
+
+    private void readMdFiles() {
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getText());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getText());
     }
 
     private void getOrders() {
