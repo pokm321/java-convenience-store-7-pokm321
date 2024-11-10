@@ -57,9 +57,9 @@ public class Products {
         return getPromotedProductsByName(name).stream().mapToInt(Product::getQuantity).sum();
     }
 
-    public int getPriceByName(String name) {
+    public long getPriceByName(String name) {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).findAny()
-                .orElseThrow(() -> new IllegalArgumentException(InputErrors.INVALID_NAME.getMessage()))
+                .orElseThrow(() -> new IllegalArgumentException(ViewErrors.INVALID_NAME.getMessage()))
                 .getPrice();
     }
 

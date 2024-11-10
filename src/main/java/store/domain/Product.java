@@ -9,7 +9,7 @@ public class Product {
     private static final String DELIMITER = ",";
 
     private final String name;
-    private final int price;
+    private final long price;
     private int quantity;
     private final String promotion;
 
@@ -18,7 +18,7 @@ public class Product {
 
         List<String> fields = getFields(line);
         this.name = fields.get(0);
-        this.price = Integer.parseInt(fields.get(1));
+        this.price = Long.parseLong(fields.get(1));
         this.quantity = Integer.parseInt(fields.get(2));
         this.promotion = fields.get(3);
     }
@@ -31,7 +31,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
@@ -76,7 +76,7 @@ public class Product {
 
     private void validateInteger(List<String> fields) {
         try {
-            Integer.parseInt(fields.get(1));
+            Long.parseLong(fields.get(1));
             Integer.parseInt(fields.get(2));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(MdErrors.MD_INTEGER_ERROR.getMessage());

@@ -50,21 +50,21 @@ public class PriceCalculator {
 
     private long getMembershipCoveredTotalPrice(Orders orders) {
         return orders.getAll().stream().mapToLong(order -> {
-            int price = products.getPriceByName(order.getName());
+            long price = products.getPriceByName(order.getName());
             if (!timer.isPromotionPeriod(order)) {
-                return (long) order.getQuantity() * price;
+                return order.getQuantity() * price;
             }
 
             return getMembershipCoveredPrice(order, price);
         }).sum();
     }
 
-    private long getMembershipCoveredPrice(Order order, int price) {
+    private long getMembershipCoveredPrice(Order order, long price) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int buyGet = promotion.getBuy() + promotion.getGet();
         int stock = products.getPromotedQuantityByName(order.getName());
         int promotedCount = (Math.min(stock, order.getQuantity()) / buyGet) * buyGet;
 
-        return (long) (order.getQuantity() - promotedCount) * price;
+        return (order.getQuantity() - promotedCount) * price;
     }
 }
