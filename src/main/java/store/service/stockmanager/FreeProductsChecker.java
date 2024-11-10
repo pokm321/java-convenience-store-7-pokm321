@@ -1,5 +1,6 @@
 package store.service.stockmanager;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -22,12 +23,12 @@ public class FreeProductsChecker {
         this.timer = timer;
     }
 
-    public Map<String, Integer> check(Orders orders) {
+    public LinkedHashMap<String, Integer> check(Orders orders) {
         return orders.getAll().stream()
                 .filter(timer::isPromotionPeriod)
                 .map(this::getFreeProduct)
                 .filter(entry -> entry.getValue() != 0)
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, Integer::sum, LinkedHashMap::new));
     }
 
     private Entry<String, Integer> getFreeProduct(Order order) {

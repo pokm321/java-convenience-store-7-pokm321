@@ -2,8 +2,8 @@ package store.domain.input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import store.domain.Products;
 import store.view.ViewErrors;
@@ -29,9 +29,9 @@ public class Orders {
         return listOfOrders;
     }
 
-    public Map<String, Integer> getMergedOrders(String rawOrders) {
+    public LinkedHashMap<String, Integer> getMergedOrders(String rawOrders) {
         return splitOrders(rawOrders).stream().map(this::getFields).collect(Collectors.toMap(fields ->
-                fields.get(0), fields -> Integer.parseInt(fields.get(1)), Integer::sum));
+                fields.get(0), fields -> Integer.parseInt(fields.get(1)), Integer::sum, LinkedHashMap::new));
     }
 
     private List<String> splitOrders(String rawOrders) {
