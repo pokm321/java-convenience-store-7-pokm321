@@ -6,6 +6,11 @@ import store.util.md.MdErrors;
 
 public class Promotions {
 
+    private static final int INDEX_NAME = 0;
+    private static final int INDEX_BUY = 1;
+    private static final int INDEX_GET = 2;
+    private static final int INDEX_START_DATE = 3;
+    private static final int INDEX_END_DATE = 4;
     private static final int FIELD_COUNT = 5;
     private static final String DELIMITER = ",";
 
@@ -16,11 +21,11 @@ public class Promotions {
 
         List<String> fields = getFields(line);
         listOfPromotions.add(new Promotion(
-                fields.get(0),
-                Integer.parseInt(fields.get(1)),
-                Integer.parseInt(fields.get(2)),
-                fields.get(3),
-                fields.get(4)
+                fields.get(INDEX_NAME),
+                Integer.parseInt(fields.get(INDEX_BUY)),
+                Integer.parseInt(fields.get(INDEX_GET)),
+                fields.get(INDEX_START_DATE),
+                fields.get(INDEX_END_DATE)
         ));
     }
 
@@ -56,8 +61,8 @@ public class Promotions {
 
     private void validateInteger(List<String> fields) {
         try {
-            Integer.parseInt(fields.get(1));
-            Integer.parseInt(fields.get(2));
+            Integer.parseInt(fields.get(INDEX_BUY));
+            Integer.parseInt(fields.get(INDEX_GET));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(MdErrors.MD_INTEGER_ERROR.getMessage());
         }
