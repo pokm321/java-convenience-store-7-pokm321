@@ -12,6 +12,8 @@ import store.service.ordermanager.NonPromotionAsker;
 import store.service.stockmanager.FreeProductsChecker;
 import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
+import store.util.md.MdKeywords;
+import store.util.md.MdReader;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -19,6 +21,7 @@ public class StoreController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final MdReader reader;
     private final Products products;
     private final Promotions promotions;
     private final Retrier retrier;
@@ -30,12 +33,14 @@ public class StoreController {
     private final StockDeductor deductor;
     private Orders orders;
 
-    public StoreController(InputView inputView, OutputView outputView, Products products, Promotions promotions,
+    public StoreController(InputView inputView, OutputView outputView, MdReader reader, Products products,
+                           Promotions promotions,
                            Retrier retrier, PromotionTimer timer, PriceCalculator calculator,
                            FreeAdditionAsker freeAsker, NonPromotionAsker nonPromotionAsker,
                            FreeProductsChecker freeProductsChecker, StockDeductor deductor) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.reader = reader;
         this.products = products;
         this.promotions = promotions;
         this.retrier = retrier;
@@ -48,6 +53,9 @@ public class StoreController {
     }
 
     public void run() {
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+
         boolean isShopping = true;
         while (isShopping) {
             timer.setTime(DateTimes.now());
@@ -77,5 +85,4 @@ public class StoreController {
 
         deductor.deductOrders(orders);
     }
-
 }

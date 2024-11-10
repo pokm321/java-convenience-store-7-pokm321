@@ -1,8 +1,5 @@
 package store.domain;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import store.util.md.MdErrors;
@@ -11,13 +8,60 @@ import store.view.ViewErrors;
 
 public class Products {
 
+    private static final int FIELD_COUNT = 4;
+    private static final String DELIMITER = ",";
+
     private final List<Product> listOfProducts = new ArrayList<>();
 
-    public Products(String path) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            addItems(reader);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(MdErrors.MD_READ_FAIL.getMessage());
+    public void addProduct(String line) {
+        validate(line);
+
+        List<String> fields = getFields(line);
+        listOfProducts.add(new Product(
+                fields.get(0),
+                Long.parseLong(fields.get(1)),
+                Integer.parseInt(fields.get(2)),
+                fields.get(3)
+        ));
+    }
+
+    private void validate(String line) {
+        validateNotNull(line);
+        List<String> fields = getFields(line);
+        validateNotEmpty(fields);
+        validateCount(fields);
+        validateInteger(fields);
+    }
+
+    private List<String> getFields(String line) {
+        return List.of(line.split(DELIMITER, -1));
+    }
+
+
+    private void validateNotNull(String line) {
+        if (line == null) {
+            throw new IllegalArgumentException(MdErrors.MD_EMPTY_ERROR.getMessage());
+        }
+    }
+
+    private void validateNotEmpty(List<String> fields) {
+        if (fields.stream().anyMatch(String::isBlank)) {
+            throw new IllegalArgumentException(MdErrors.MD_EMPTY_ERROR.getMessage());
+        }
+    }
+
+    private void validateCount(List<String> fields) {
+        if (fields.size() != FIELD_COUNT) {
+            throw new IllegalArgumentException(MdErrors.MD_COUNT_ERROR.getMessage());
+        }
+    }
+
+    private void validateInteger(List<String> fields) {
+        try {
+            Long.parseLong(fields.get(1));
+            Integer.parseInt(fields.get(2));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(MdErrors.MD_INTEGER_ERROR.getMessage());
         }
     }
 
@@ -61,13 +105,5 @@ public class Products {
         return listOfProducts.stream().filter(product -> product.getName().equals(name)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException(ViewErrors.INVALID_NAME.getMessage()))
                 .getPrice();
-    }
-
-    private void addItems(BufferedReader reader) throws IOException {
-        String line;
-        reader.readLine();
-        while ((line = reader.readLine()) != null) {
-            listOfProducts.add(new Product(line));
-        }
     }
 }

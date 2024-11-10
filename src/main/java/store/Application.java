@@ -10,16 +10,18 @@ import store.service.ordermanager.NonPromotionAsker;
 import store.service.stockmanager.FreeProductsChecker;
 import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
-import store.util.md.MdKeywords;
+import store.util.md.MdReader;
 import store.view.InputView;
 import store.view.OutputView;
 
 public class Application {
+
     public static void main(String[] args) {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
-        Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
-        Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
+        MdReader reader = new MdReader();
+        Products products = new Products();
+        Promotions promotions = new Promotions();
         Retrier retrier = new Retrier();
         PromotionTimer timer = new PromotionTimer(products, promotions);
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
@@ -28,7 +30,8 @@ public class Application {
         FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
         StockDeductor deductor = new StockDeductor(products, timer);
 
-        StoreController controller = new StoreController(inputView, outputView, products, promotions, retrier, timer,
+        StoreController controller = new StoreController(inputView, outputView, reader, products, promotions, retrier,
+                timer,
                 calculator, freeAdditionAsker, nonPromotionAsker, freeProductsChecker, deductor);
 
         controller.run();

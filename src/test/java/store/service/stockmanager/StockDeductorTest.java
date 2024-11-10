@@ -3,6 +3,7 @@ package store.service.stockmanager;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.domain.Product;
 import store.domain.Products;
@@ -10,13 +11,21 @@ import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.service.PromotionTimer;
 import store.util.md.MdKeywords;
+import store.util.md.MdReader;
 
 public class StockDeductorTest {
 
-    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
-    Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
+    Products products = new Products();
+    Promotions promotions = new Promotions();
+    MdReader reader = new MdReader();
     PromotionTimer timer = new PromotionTimer(products, promotions);
     StockDeductor deductor = new StockDeductor(products, timer);
+
+    @BeforeEach
+    void setup() {
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+    }
 
     @Test
     void 여러_주문_기능_테스트() {

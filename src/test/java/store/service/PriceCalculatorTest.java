@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
@@ -12,17 +13,25 @@ import store.domain.input.Orders;
 import store.service.stockmanager.FreeProductsChecker;
 import store.util.Retrier;
 import store.util.md.MdKeywords;
+import store.util.md.MdReader;
 import store.view.InputView;
 
 public class PriceCalculatorTest {
 
     InputView inputView = new InputView();
-    Products products = new Products(MdKeywords.PRODUCTS_PATH.getValue());
-    Promotions promotions = new Promotions(MdKeywords.PROMOTIONS_PATH.getValue());
+    MdReader reader = new MdReader();
+    Products products = new Products();
+    Promotions promotions = new Promotions();
     Retrier retrier = new Retrier();
     PromotionTimer timer = new PromotionTimer(products, promotions);
     FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
     PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
+
+    @BeforeEach
+    void setup() {
+        reader.readProducts(products, MdKeywords.PRODUCTS_PATH.getValue());
+        reader.readPromotions(promotions, MdKeywords.PROMOTIONS_PATH.getValue());
+    }
 
     @Test
     void 총구매액_계산_테스트() {

@@ -27,7 +27,6 @@ public class NonPromotionAsker {
         this.retrier = retrier;
     }
 
-
     public void ask(Orders orders) {
         for (Order order : orders.getAll()) {
             askNotEnoughPromotionStock(order);
