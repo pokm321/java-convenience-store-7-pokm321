@@ -4,7 +4,7 @@ import camp.nextstep.edu.missionutils.Console;
 
 public class InputView {
 
-    public String readItem() {
+    public String askOrder() {
         System.out.printf(ViewMessages.ASK_ORDER.getMessage());
         return Console.readLine();
     }

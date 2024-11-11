@@ -81,7 +81,7 @@ public class StoreController {
 
     private void getOrders() {
         outputView.printStock(products);
-        orders = retrier.tryUntilSuccess(() -> new Orders(inputView.readItem(), products));
+        orders = retrier.tryUntilSuccess(() -> new Orders(inputView.askOrder(), products));
     }
 
     private void adjustOrders() {
