@@ -1,10 +1,14 @@
 # 우아한테크코스 프리코스 4주차: 편의점 :convenience_store:
 
-우아한테크코스의 4주차 프리코스로, 편의점 결제 시스템을 구현한 과제입니다.
+우아한테크코스의 4주차 프리코스로, 편의점 결제 시스템을 구현한 과제입니다.  
 구매자의 할인 혜택과 재고 상황을 고려하여 최종 결제 금액을 계산하고, 영수증을 출력합니다.
 
 <img width="256" src="https://github.com/user-attachments/assets/838185bc-e48f-4fe3-898b-77fcdea003c1">
-<br>
+<br><br><br>
+
+## 클래스 구성도
+<image width="512" src="https://github.com/user-attachments/assets/1f0a8ef7-843f-49d5-a391-0b3d8013cc54">
+<br><br><br>
 
 ## 기능구현
 
@@ -109,13 +113,14 @@ N
 
 - [x] indent(인덴트, 들여쓰기) depth는 2까지만 허용
 - [x] 3항 연산자 금지
-- [ ] 함수(또는 메서드)가 한 가지 일만 하며, 10줄을 넘어가지 않도록
+- [x] 함수(또는 메서드)가 한 가지 일만 하며, 10줄을 넘어가지 않도록
 - [x] else 예약어 및 switch/case 금지
 - [x] Java Enum 활용
 - [x] JUnit 5와 AssertJ를 이용하여 구현한 기능에 대한 단위 테스트. 단, UI(System.out, System.in, Scanner) 로직은 제외
 - [x] 입출력을 담당하는 클래스 구현
 - [x] `camp.nextstep.edu.missionutils` 의 `DateTimes.now()` 및 `Console.readLine()` 활용
-  <br>
+
+<br>
 
 ### 명확하지 않은 요구사항에 대한 정리
 
