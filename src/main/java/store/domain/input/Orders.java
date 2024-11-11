@@ -14,7 +14,6 @@ public class Orders {
     private static final char LEFT_BRACKET = '[';
     private static final char RIGHT_BRACKET = ']';
     private static final String HYPHEN = "-";
-    private static final int MIN_QUANTITY = 0;
 
     private final List<Order> listOfOrders = new ArrayList<>();
 
@@ -55,7 +54,6 @@ public class Orders {
             validateBrackets(order);
             validateHyphen(order);
             validateInteger(order);
-            validateRange(order);
         }
     }
 
@@ -96,11 +94,4 @@ public class Orders {
             throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
         }
     }
-
-    private void validateRange(String order) {
-        if (Integer.parseInt(getFields(order).get(1)) <= MIN_QUANTITY) {
-            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
-        }
-    }
-
 }

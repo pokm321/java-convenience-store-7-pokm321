@@ -5,6 +5,8 @@ import store.view.ViewErrors;
 
 public class Order {
 
+    private static final int MIN_QUANTITY = 0;
+
     private final String name;
     private int quantity;
 
@@ -16,8 +18,15 @@ public class Order {
     }
 
     private void validate(String name, int quantity, Products products) {
+        validateRange(quantity);
         validateNameExists(name, products);
         validateQuantityEnough(name, quantity, products);
+    }
+
+    private void validateRange(int quantity) {
+        if (quantity <= MIN_QUANTITY) {
+            throw new IllegalArgumentException(ViewErrors.INVALID_FORMAT.getMessage());
+        }
     }
 
     private void validateNameExists(String name, Products products) {
