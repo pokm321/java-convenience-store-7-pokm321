@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
-import store.dto.receipt.FreeProductDTO;
+import store.dto.receipt.ReceiptFreeProductDTO;
 import store.service.PromotionTimer;
 import store.util.md.MdKeywords;
 import store.util.md.MdReader;
@@ -35,7 +35,7 @@ public class FreeProductsCheckerTest {
 
         timer.setTime(LocalDateTime.parse("2024-05-05T23:59:59"));
 
-        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        List<ReceiptFreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
         assertThat(freeProducts.get(0).getName()).isEqualTo("초코바");
         assertThat(freeProducts.get(0).getQuantity()).isEqualTo(2);
         assertThat(freeProducts.get(1).getName()).isEqualTo("사이다");
@@ -49,7 +49,7 @@ public class FreeProductsCheckerTest {
 
         timer.setTime(LocalDateTime.parse("2024-11-05T23:59:59"));
 
-        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        List<ReceiptFreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
         assertThat(freeProducts.get(0).getName()).isEqualTo("초코바");
         assertThat(freeProducts.get(0).getQuantity()).isEqualTo(2);
         assertThat(freeProducts.get(1).getName()).isEqualTo("감자칩");

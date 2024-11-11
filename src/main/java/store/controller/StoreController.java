@@ -1,18 +1,18 @@
 package store.controller;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import java.time.LocalDateTime;
 import java.util.List;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
-import store.dto.receipt.FreeProductDTO;
+import store.dto.receipt.ReceiptFreeProductDTO;
 import store.service.PriceCalculator;
 import store.service.PromotionTimer;
 import store.service.ordermanager.FreeAdditionAsker;
 import store.service.ordermanager.NonPromotionAsker;
 import store.service.stockmanager.FreeProductsChecker;
 import store.service.stockmanager.OrdersChecker;
+import store.service.stockmanager.StockChecker;
 import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
 import store.util.md.MdKeywords;
@@ -32,6 +32,7 @@ public class StoreController {
     private final PriceCalculator calculator;
     private final FreeAdditionAsker freeAsker;
     private final NonPromotionAsker nonPromotionAsker;
+    private final StockChecker stockChecker;
     private final OrdersChecker ordersChecker;
     private final FreeProductsChecker freeProductsChecker;
     private final StockDeductor deductor;
@@ -39,7 +40,7 @@ public class StoreController {
 
     public StoreController(InputView inputView, OutputView outputView, MdReader reader, Products products,
                            Promotions promotions, Retrier retrier, PromotionTimer timer, PriceCalculator calculator,
-                           FreeAdditionAsker freeAsker, NonPromotionAsker nonPromotionAsker,
+                           FreeAdditionAsker freeAsker, NonPromotionAsker nonPromotionAsker, StockChecker stockChecker,
                            OrdersChecker ordersChecker, FreeProductsChecker freeProductsChecker,
                            StockDeductor deductor) {
         this.inputView = inputView;
@@ -52,6 +53,7 @@ public class StoreController {
         this.calculator = calculator;
         this.freeAsker = freeAsker;
         this.nonPromotionAsker = nonPromotionAsker;
+        this.stockChecker = stockChecker;
         this.ordersChecker = ordersChecker;
         this.freeProductsChecker = freeProductsChecker;
         this.deductor = deductor;
@@ -63,8 +65,6 @@ public class StoreController {
         boolean isShopping = true;
         while (isShopping) {
             timer.setTime(DateTimes.now());
-
-            timer.setTime(LocalDateTime.parse("2024-05-08T01:20:30"));
 
             getOrders();
             adjustOrders();
@@ -80,7 +80,7 @@ public class StoreController {
     }
 
     private void getOrders() {
-        outputView.printStock(products);
+        outputView.printStock(stockChecker.createStockProductDTOs());
         orders = retrier.tryUntilSuccess(() -> new Orders(inputView.askOrder(), products));
     }
 
@@ -90,10 +90,10 @@ public class StoreController {
     }
 
     private void processOrders() {
-        List<FreeProductDTO> freeProductDTOs = freeProductsChecker.createFreeProductDTOs(orders);
-        outputView.printReceipt(ordersChecker.createProductDTOs(orders),
+        List<ReceiptFreeProductDTO> receiptFreeProductDTOS = freeProductsChecker.createFreeProductDTOs(orders);
+        outputView.printReceipt(ordersChecker.createReceiptProductDTOs(orders),
                 freeProductsChecker.createFreeProductDTOs(orders),
-                calculator.createFooterDTO(orders, freeProductDTOs));
+                calculator.createFooterDTO(orders, receiptFreeProductDTOS));
 
         deductor.deductOrders(orders);
     }

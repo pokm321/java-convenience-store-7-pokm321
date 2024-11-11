@@ -1,11 +1,11 @@
 package store.dto.receipt;
 
-public class FreeProductDTO {
+public class ReceiptFreeProductDTO {
 
     private final String name;
     private final int quantity;
 
-    public FreeProductDTO(String name, int quantity) {
+    public ReceiptFreeProductDTO(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }

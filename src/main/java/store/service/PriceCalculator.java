@@ -6,8 +6,8 @@ import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
-import store.dto.receipt.FooterDTO;
-import store.dto.receipt.FreeProductDTO;
+import store.dto.receipt.ReceiptFooterDTO;
+import store.dto.receipt.ReceiptFreeProductDTO;
 import store.util.Retrier;
 import store.view.InputView;
 
@@ -31,11 +31,11 @@ public class PriceCalculator {
         this.retrier = retrier;
     }
 
-    public FooterDTO createFooterDTO(Orders orders, List<FreeProductDTO> freeProducts) {
+    public ReceiptFooterDTO createFooterDTO(Orders orders, List<ReceiptFreeProductDTO> freeProducts) {
         long totalPrice = getRawTotalPrice(orders);
         long promotionDiscount = getPromotionDiscount(freeProducts);
         long membershipDiscount = askMembershipDiscount(orders);
-        return new FooterDTO(orders.getTotalQuantity(), totalPrice, promotionDiscount, membershipDiscount,
+        return new ReceiptFooterDTO(orders.getTotalQuantity(), totalPrice, promotionDiscount, membershipDiscount,
                 totalPrice + promotionDiscount + membershipDiscount);
     }
 
@@ -45,7 +45,7 @@ public class PriceCalculator {
                 .sum();
     }
 
-    private long getPromotionDiscount(List<FreeProductDTO> freeProducts) {
+    private long getPromotionDiscount(List<ReceiptFreeProductDTO> freeProducts) {
         return freeProducts.stream()
                 .mapToLong(freeProduct -> freeProduct.getQuantity() * products.getPriceByName(freeProduct.getName()))
                 .sum() * -1;

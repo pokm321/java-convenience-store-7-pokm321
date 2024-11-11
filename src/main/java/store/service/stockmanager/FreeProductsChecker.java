@@ -6,7 +6,7 @@ import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
-import store.dto.receipt.FreeProductDTO;
+import store.dto.receipt.ReceiptFreeProductDTO;
 import store.service.PromotionTimer;
 
 public class FreeProductsChecker {
@@ -21,7 +21,7 @@ public class FreeProductsChecker {
         this.timer = timer;
     }
 
-    public List<FreeProductDTO> createFreeProductDTOs(Orders orders) {
+    public List<ReceiptFreeProductDTO> createFreeProductDTOs(Orders orders) {
         return orders.getAll().stream()
                 .filter(timer::isPromotionPeriod)
                 .map(this::getFreeProductDTO)
@@ -29,12 +29,12 @@ public class FreeProductsChecker {
                 .toList();
     }
 
-    private FreeProductDTO getFreeProductDTO(Order order) {
+    private ReceiptFreeProductDTO getFreeProductDTO(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotionStock = products.getPromotionQuantityByName(order.getName());
         int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
 
-        return new FreeProductDTO(order.getName(), freeCount);
+        return new ReceiptFreeProductDTO(order.getName(), freeCount);
     }
 }

@@ -1,6 +1,6 @@
 package store.dto.receipt;
 
-public class FooterDTO {
+public class ReceiptFooterDTO {
 
     private final int totalQuantity;
     private final long rawTotalPrice;
@@ -8,8 +8,8 @@ public class FooterDTO {
     private final long membershipDiscount;
     private final long payment;
 
-    public FooterDTO(int totalQuantity, long rawTotalPrice, long promotionDiscount, long membershipDiscount,
-                     long payment) {
+    public ReceiptFooterDTO(int totalQuantity, long rawTotalPrice, long promotionDiscount, long membershipDiscount,
+                            long payment) {
         this.totalQuantity = totalQuantity;
         this.rawTotalPrice = rawTotalPrice;
         this.promotionDiscount = promotionDiscount;

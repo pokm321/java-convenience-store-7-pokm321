@@ -9,6 +9,7 @@ import store.service.ordermanager.FreeAdditionAsker;
 import store.service.ordermanager.NonPromotionAsker;
 import store.service.stockmanager.FreeProductsChecker;
 import store.service.stockmanager.OrdersChecker;
+import store.service.stockmanager.StockChecker;
 import store.service.stockmanager.StockDeductor;
 import store.util.Retrier;
 import store.util.md.MdReader;
@@ -28,12 +29,14 @@ public class Application {
         PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
         FreeAdditionAsker freeAdditionAsker = new FreeAdditionAsker(inputView, products, promotions, timer, retrier);
         NonPromotionAsker nonPromotionAsker = new NonPromotionAsker(inputView, products, promotions, timer, retrier);
+        StockChecker stockChecker = new StockChecker(products);
         OrdersChecker ordersChecker = new OrdersChecker(products);
         FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
         StockDeductor deductor = new StockDeductor(products, timer);
 
         StoreController controller = new StoreController(inputView, outputView, reader, products, promotions, retrier,
-                timer, calculator, freeAdditionAsker, nonPromotionAsker, ordersChecker, freeProductsChecker, deductor);
+                timer, calculator, freeAdditionAsker, nonPromotionAsker, stockChecker, ordersChecker,
+                freeProductsChecker, deductor);
 
         controller.run();
     }

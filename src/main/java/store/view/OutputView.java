@@ -2,11 +2,10 @@ package store.view;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import store.domain.Product;
-import store.domain.Products;
-import store.dto.receipt.FooterDTO;
-import store.dto.receipt.FreeProductDTO;
-import store.dto.receipt.ProductDTO;
+import store.dto.receipt.ReceiptFooterDTO;
+import store.dto.receipt.ReceiptFreeProductDTO;
+import store.dto.receipt.ReceiptProductDTO;
+import store.dto.stock.StockProductDTO;
 import store.util.md.MdKeywords;
 
 public class OutputView {
@@ -17,15 +16,15 @@ public class OutputView {
         System.out.println(message);
     }
 
-    public void printStock(Products products) {
+    public void printStock(List<StockProductDTO> stockProductDTOs) {
         System.out.printf(ViewMessages.WELCOME.getMessage());
 
-        for (Product product : products.getAll()) {
+        stockProductDTOs.forEach(product -> {
             System.out.printf(ViewMessages.ITEM_INFO.getMessage(), product.getName(), product.getPrice());
 
             printQuantity(product.getQuantity());
             printPromotion(product.getPromotion());
-        }
+        });
     }
 
     private void printQuantity(int quantity) {
@@ -44,38 +43,39 @@ public class OutputView {
         System.out.println(ViewMessages.SPACE.getMessage() + promotion);
     }
 
-    public void printReceipt(List<ProductDTO> productDTOs, List<FreeProductDTO> freeProductDTOs, FooterDTO footerDTO) {
-        printProducts(productDTOs);
-        printFreeProducts(freeProductDTOs);
-        printFooter(footerDTO);
+    public void printReceipt(List<ReceiptProductDTO> receiptProductDTOS,
+                             List<ReceiptFreeProductDTO> receiptFreeProductDTOS, ReceiptFooterDTO receiptFooterDTO) {
+        printProducts(receiptProductDTOS);
+        printFreeProducts(receiptFreeProductDTOS);
+        printFooter(receiptFooterDTO);
     }
 
-    private void printProducts(List<ProductDTO> productDTOs) {
+    private void printProducts(List<ReceiptProductDTO> receiptProductDTOS) {
         System.out.println(Receipt.HEADER_RECEIPT.getText());
         System.out.println(Receipt.HEADER_PRODUCTS.getText());
-        productDTOs.forEach(product -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
+        receiptProductDTOS.forEach(product -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
                 parseToLength(product.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), product.getQuantity(),
                 product.getTotalPrice()));
     }
 
-    private void printFreeProducts(List<FreeProductDTO> freeProducts) {
+    private void printFreeProducts(List<ReceiptFreeProductDTO> freeProducts) {
         System.out.println(Receipt.HEADER_FREE_PRODUCTS.getText());
         freeProducts.forEach(product -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getText(),
                 parseToLength(product.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), product.getQuantity()));
     }
 
-    private void printFooter(FooterDTO footerDTO) {
+    private void printFooter(ReceiptFooterDTO receiptFooterDTO) {
         System.out.println(Receipt.FOOTER_RECEIPT.getText());
-        printRawTotal(footerDTO);
-        printPromotionDiscount(footerDTO.getPromotionDiscount());
-        printMembershipDiscount(footerDTO.getMembershipDiscount());
-        printPayment(footerDTO.getPayment());
+        printRawTotal(receiptFooterDTO);
+        printPromotionDiscount(receiptFooterDTO.getPromotionDiscount());
+        printMembershipDiscount(receiptFooterDTO.getMembershipDiscount());
+        printPayment(receiptFooterDTO.getPayment());
     }
 
-    private void printRawTotal(FooterDTO footerDTO) {
+    private void printRawTotal(ReceiptFooterDTO receiptFooterDTO) {
         System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
                 parseToLength(Receipt.ROW_TOTAL_PRICE.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                footerDTO.getTotalQuantity(), footerDTO.getRawTotalPrice());
+                receiptFooterDTO.getTotalQuantity(), receiptFooterDTO.getRawTotalPrice());
     }
 
     private void printPromotionDiscount(long promotionDiscount) {
