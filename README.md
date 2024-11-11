@@ -8,7 +8,7 @@
 
 ## 클래스 구성도
 
-<image width="512" src="https://github.com/user-attachments/assets/1f0a8ef7-843f-49d5-a391-0b3d8013cc54">
+<image width="700" src="https://github.com/user-attachments/assets/dbc8a239-8ed8-4b42-97b6-703a09e8eace">
 <br><br><br>
 
 ## 기능구현
@@ -27,7 +27,6 @@
 
 - 프로모션 할인
     - 오늘 날짜가 프로모션 기간 내에 포함된 경우에만 할인 적용
-    - 프로모션은 N개 구매 시 1개 무료 증정(Buy N Get 1 Free)의 형태
     - 각 상품에 최대 하나의 1+1 또는 2+1 프로모션 적용
     - 프로모션 혜택은 프로모션 재고 내에서만 적용
     - 프로모션 기간 중이라면 프로모션 재고를 우선적으로 차감, 프로모션 재고가 부족할 경우에는 일반 재고 사용
