@@ -1,4 +1,4 @@
-package store.service.stockmanager;
+package store.service.dtocreator;
 
 import java.util.List;
 import store.domain.Products;

@@ -1,4 +1,4 @@
-package store.service.stockmanager;
+package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +9,6 @@ import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
-import store.service.PromotionTimer;
 import store.util.md.MdKeywords;
 import store.util.md.MdReader;
 

@@ -1,4 +1,4 @@
-package store.service;
+package store.service.dtocreator;
 
 import java.util.List;
 import store.domain.Products;
@@ -8,27 +8,25 @@ import store.domain.input.Order;
 import store.domain.input.Orders;
 import store.dto.receipt.ReceiptFooterDTO;
 import store.dto.receipt.ReceiptFreeProductDTO;
-import store.util.Retrier;
-import store.view.InputView;
+import store.service.PromotionTimer;
+import store.service.asker.MembershipAsker;
 
 public class PriceCalculator {
 
-    private final InputView inputView;
     private final Products products;
     private final Promotions promotions;
     private final PromotionTimer timer;
-    private final Retrier retrier;
+    private final MembershipAsker membershipAsker;
 
     private static final float MEMBERSHIP_DISCOUNT_RATE = 0.3F;
     private static final int MAX_MEMBERSHIP_DISCOUNT = 8000;
 
-    public PriceCalculator(InputView inputView, Products products, Promotions promotions, PromotionTimer timer,
-                           Retrier retrier) {
-        this.inputView = inputView;
+    public PriceCalculator(Products products, Promotions promotions, PromotionTimer timer,
+                           MembershipAsker membershipAsker) {
         this.products = products;
         this.promotions = promotions;
         this.timer = timer;
-        this.retrier = retrier;
+        this.membershipAsker = membershipAsker;
     }
 
     public ReceiptFooterDTO createFooterDTO(Orders orders, List<ReceiptFreeProductDTO> freeProducts) {
@@ -52,7 +50,7 @@ public class PriceCalculator {
     }
 
     private long askMembershipDiscount(Orders orders) {
-        if (retrier.tryUntilSuccess(inputView::isMembership)) {
+        if (membershipAsker.askMembership()) {
             return (long) Math.min(
                     getMembershipCoveredTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
                     MAX_MEMBERSHIP_DISCOUNT) * -1;

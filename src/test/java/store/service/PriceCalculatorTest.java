@@ -13,7 +13,9 @@ import store.domain.Promotions;
 import store.domain.input.Orders;
 import store.dto.receipt.ReceiptFooterDTO;
 import store.dto.receipt.ReceiptFreeProductDTO;
-import store.service.stockmanager.FreeProductsChecker;
+import store.service.asker.MembershipAsker;
+import store.service.dtocreator.FreeProductsChecker;
+import store.service.dtocreator.PriceCalculator;
 import store.util.Retrier;
 import store.util.md.MdKeywords;
 import store.util.md.MdReader;
@@ -28,7 +30,8 @@ public class PriceCalculatorTest {
     Retrier retrier = new Retrier();
     PromotionTimer timer = new PromotionTimer(products, promotions);
     FreeProductsChecker freeProductsChecker = new FreeProductsChecker(products, promotions, timer);
-    PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
+    MembershipAsker membershipAsker = new MembershipAsker(inputView, retrier);
+    PriceCalculator calculator = new PriceCalculator(products, promotions, timer, membershipAsker);
 
     @BeforeEach
     void setup() {

@@ -1,4 +1,4 @@
-package store.service.ordermanager;
+package store.service.asker;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

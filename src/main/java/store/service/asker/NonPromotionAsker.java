@@ -1,4 +1,4 @@
-package store.service.ordermanager;
+package store.service.asker;
 
 import store.domain.Products;
 import store.domain.Promotion;

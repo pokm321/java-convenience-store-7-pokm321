@@ -1,4 +1,4 @@
-package store.service.stockmanager;
+package store.service;
 
 import java.util.Comparator;
 import java.util.List;
@@ -6,7 +6,6 @@ import store.domain.Product;
 import store.domain.Products;
 import store.domain.input.Order;
 import store.domain.input.Orders;
-import store.service.PromotionTimer;
 import store.util.md.MdKeywords;
 
 public class StockDeductor {
