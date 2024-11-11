@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
+import store.dto.receipt.FreeProductDTO;
 import store.service.PromotionTimer;
 import store.util.md.MdKeywords;
 import store.util.md.MdReader;
@@ -34,10 +35,12 @@ public class FreeProductsCheckerTest {
 
         timer.setTime(LocalDateTime.parse("2024-05-05T23:59:59"));
 
-        Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
-        assertThat(freeProducts.get("초코바")).isEqualTo(2);
-        assertThat(freeProducts.get("사이다")).isEqualTo(2);
-        assertFalse(freeProducts.containsKey("감자칩"));
+        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        assertThat(freeProducts.get(0).getName()).isEqualTo("초코바");
+        assertThat(freeProducts.get(0).getQuantity()).isEqualTo(2);
+        assertThat(freeProducts.get(1).getName()).isEqualTo("사이다");
+        assertThat(freeProducts.get(1).getQuantity()).isEqualTo(2);
+        assertFalse(freeProducts.stream().anyMatch(p -> p.getName().equals("감자칩")));
     }
 
     @Test
@@ -46,9 +49,12 @@ public class FreeProductsCheckerTest {
 
         timer.setTime(LocalDateTime.parse("2024-11-05T23:59:59"));
 
-        Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
-        assertThat(freeProducts.get("초코바")).isEqualTo(2);
-        assertThat(freeProducts.get("사이다")).isEqualTo(2);
-        assertThat(freeProducts.get("감자칩")).isEqualTo(1);
+        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        assertThat(freeProducts.get(0).getName()).isEqualTo("초코바");
+        assertThat(freeProducts.get(0).getQuantity()).isEqualTo(2);
+        assertThat(freeProducts.get(1).getName()).isEqualTo("감자칩");
+        assertThat(freeProducts.get(1).getQuantity()).isEqualTo(1);
+        assertThat(freeProducts.get(2).getName()).isEqualTo("사이다");
+        assertThat(freeProducts.get(2).getQuantity()).isEqualTo(2);
     }
 }

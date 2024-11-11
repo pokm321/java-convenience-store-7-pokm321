@@ -1,14 +1,12 @@
 package store.service.stockmanager;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import java.util.List;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
+import store.dto.receipt.FreeProductDTO;
 import store.service.PromotionTimer;
 
 public class FreeProductsChecker {
@@ -23,20 +21,20 @@ public class FreeProductsChecker {
         this.timer = timer;
     }
 
-    public LinkedHashMap<String, Integer> check(Orders orders) {
+    public List<FreeProductDTO> createFreeProductDTOs(Orders orders) {
         return orders.getAll().stream()
                 .filter(timer::isPromotionPeriod)
-                .map(this::getFreeProduct)
-                .filter(entry -> entry.getValue() != 0)
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, Integer::sum, LinkedHashMap::new));
+                .map(this::getFreeProductDTO)
+                .filter(freeProduct -> freeProduct.getQuantity() != 0)
+                .toList();
     }
 
-    private Entry<String, Integer> getFreeProduct(Order order) {
+    private FreeProductDTO getFreeProductDTO(Order order) {
         Promotion promotion = promotions.getPromotion(products.getPromotionNameByName(order.getName()));
         int buyGet = promotion.getBuy() + promotion.getGet();
         int promotionStock = products.getPromotionQuantityByName(order.getName());
         int freeCount = (Math.min(promotionStock, order.getQuantity()) / buyGet) * promotion.getGet();
 
-        return Map.entry(order.getName(), freeCount);
+        return new FreeProductDTO(order.getName(), freeCount);
     }
 }

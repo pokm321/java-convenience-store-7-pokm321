@@ -1,11 +1,12 @@
 package store.view;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.util.List;
 import store.domain.Product;
 import store.domain.Products;
-import store.domain.Promotions;
-import store.domain.input.Orders;
+import store.dto.receipt.FooterDTO;
+import store.dto.receipt.FreeProductDTO;
+import store.dto.receipt.ProductDTO;
 import store.util.md.MdKeywords;
 
 public class OutputView {
@@ -16,7 +17,7 @@ public class OutputView {
         System.out.println(message);
     }
 
-    public void printStock(Products products, Promotions promotions) {
+    public void printStock(Products products) {
         System.out.printf(ViewMessages.WELCOME.getMessage());
 
         for (Product product : products.getAll()) {
@@ -43,58 +44,56 @@ public class OutputView {
         System.out.println(ViewMessages.SPACE.getMessage() + promotion);
     }
 
-    public void printReceipt(Orders orders, Products products, Map<String, Integer> freeProducts, long rawTotal,
-                             long promotionDiscount, long membershipDiscount) {
-        printProducts(orders, products);
-        printFreeProducts(freeProducts);
-        printFooter(orders, rawTotal, promotionDiscount, membershipDiscount);
+    public void printReceipt(List<ProductDTO> productDTOs, List<FreeProductDTO> freeProductDTOs, FooterDTO footerDTO) {
+        printProducts(productDTOs);
+        printFreeProducts(freeProductDTOs);
+        printFooter(footerDTO);
     }
 
-    private void printProducts(Orders orders, Products products) {
+    private void printProducts(List<ProductDTO> productDTOs) {
         System.out.println(Receipt.HEADER_RECEIPT.getText());
         System.out.println(Receipt.HEADER_PRODUCTS.getText());
-        orders.getAll().forEach(o -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
-                parseToLength(o.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), o.getQuantity(),
-                o.getQuantity() * products.getPriceByName(o.getName())));
+        productDTOs.forEach(product -> System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
+                parseToLength(product.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), product.getQuantity(),
+                product.getTotalPrice()));
     }
 
-    private void printFreeProducts(Map<String, Integer> freeProducts) {
+    private void printFreeProducts(List<FreeProductDTO> freeProducts) {
         System.out.println(Receipt.HEADER_FREE_PRODUCTS.getText());
-        freeProducts.forEach((key, value) -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getText(),
-                parseToLength(key, Receipt.FIRST_COLUMN_LENGTH.getNumber()), value));
+        freeProducts.forEach(product -> System.out.printf(Receipt.COLUMN_FORMAT_FIRST_SECOND.getText(),
+                parseToLength(product.getName(), Receipt.FIRST_COLUMN_LENGTH.getNumber()), product.getQuantity()));
     }
 
-    private void printFooter(Orders orders, long rawTotal, long promotionDiscount, long membershipDiscount) {
+    private void printFooter(FooterDTO footerDTO) {
         System.out.println(Receipt.FOOTER_RECEIPT.getText());
-        printRawTotal(orders, rawTotal);
-        printPromotionDiscount(promotionDiscount);
-        printMembershipDiscount(membershipDiscount);
-        printPayment(rawTotal, promotionDiscount, membershipDiscount);
+        printRawTotal(footerDTO);
+        printPromotionDiscount(footerDTO.getPromotionDiscount());
+        printMembershipDiscount(footerDTO.getMembershipDiscount());
+        printPayment(footerDTO.getPayment());
     }
 
-    private void printRawTotal(Orders orders, long rawTotal) {
+    private void printRawTotal(FooterDTO footerDTO) {
         System.out.printf(Receipt.COLUMN_FORMAT_ALL_THREE.getText(),
                 parseToLength(Receipt.ROW_TOTAL_PRICE.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                orders.getTotalQuantity(),
-                rawTotal);
+                footerDTO.getTotalQuantity(), footerDTO.getRawTotalPrice());
     }
 
     private void printPromotionDiscount(long promotionDiscount) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
                 parseToLength(Receipt.ROW_PROMOTION_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                promotionDiscount * -1);
+                promotionDiscount);
     }
 
     private void printMembershipDiscount(long membershipDiscount) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
                 parseToLength(Receipt.ROW_MEMBERSHIP_DISCOUNT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                membershipDiscount * -1);
+                membershipDiscount);
     }
 
-    private void printPayment(long rawTotal, long promotionDiscount, long membershipDiscount) {
+    private void printPayment(long payment) {
         System.out.printf(Receipt.COLUMN_FORMAT_FIRST_THIRD.getText(),
                 parseToLength(Receipt.ROW_PAYMENT.getText(), Receipt.FIRST_COLUMN_LENGTH.getNumber()),
-                rawTotal - promotionDiscount - membershipDiscount);
+                payment);
     }
 
     private String parseToLength(String rawText, int desiredLength) {

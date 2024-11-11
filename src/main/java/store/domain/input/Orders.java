@@ -29,8 +29,8 @@ public class Orders {
         return listOfOrders;
     }
 
-    public long getTotalQuantity() {
-        return listOfOrders.stream().mapToLong(Order::getQuantity).sum();
+    public int getTotalQuantity() {
+        return listOfOrders.stream().mapToInt(Order::getQuantity).sum();
     }
 
     public LinkedHashMap<String, Integer> getMergedOrders(String rawOrders) {

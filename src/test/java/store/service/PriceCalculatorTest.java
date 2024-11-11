@@ -5,12 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import camp.nextstep.edu.missionutils.Console;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.domain.Products;
 import store.domain.Promotions;
 import store.domain.input.Orders;
+import store.dto.receipt.FooterDTO;
+import store.dto.receipt.FreeProductDTO;
 import store.service.stockmanager.FreeProductsChecker;
 import store.util.Retrier;
 import store.util.md.MdKeywords;
@@ -35,43 +37,33 @@ public class PriceCalculatorTest {
     }
 
     @Test
-    void 총구매액_계산_테스트() {
-        Orders orders = new Orders("[초코바-10],[사이다-9]", products);
-        PromotionTimer timer = new PromotionTimer(products, promotions);
-        PriceCalculator calculator = new PriceCalculator(inputView, products, promotions, timer, retrier);
-        assertThat(calculator.getRawTotalPrice(orders)).isEqualTo(21000L);
-    }
-
-    @Test
-    void 행사할인_계산_테스트() {
+    void 시간대별_계산_테스트_1() {
         Orders orders = new Orders("[초코바-10],[사이다-9],[감자칩-2]", products);
 
+        Console.close();
+        System.setIn(new ByteArrayInputStream("Y\nY\nY\n".getBytes()));
         timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
-        Map<String, Integer> freeProducts = freeProductsChecker.check(orders);
-        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(0L);
-
-        timer.setTime(LocalDateTime.parse("2024-05-08T01:20:30"));
-        freeProducts = freeProductsChecker.check(orders);
-        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(4400L);
-
-        timer.setTime(LocalDateTime.parse("2024-11-08T01:20:30"));
-        freeProducts = freeProductsChecker.check(orders);
-        assertThat(calculator.getPromotionDiscount(freeProducts)).isEqualTo(5900L);
+        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        FooterDTO footerDTO = calculator.createFooterDTO(orders, freeProducts);
+        assertThat(footerDTO.getRawTotalPrice()).isEqualTo(24000);
+        assertThat(footerDTO.getPromotionDiscount()).isEqualTo(0);
+        assertThat(footerDTO.getMembershipDiscount()).isEqualTo(-7200);
+        assertThat(footerDTO.getPayment()).isEqualTo(16800);
     }
 
     @Test
-    void 멤버십할인_계산_테스트() {
-        Orders orders = new Orders("[초코바-10],[사이다-9],[감자칩-10]", products);
+    void 시간대별_계산_테스트_2() {
+        Orders orders = new Orders("[초코바-10],[사이다-9],[감자칩-2]", products);
+
         Console.close();
-        System.setIn(new ByteArrayInputStream("Y\nY\nY".getBytes()));
-
-        timer.setTime(LocalDateTime.parse("2023-05-08T01:20:30"));
-        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(8000L);
-
+        System.setIn(new ByteArrayInputStream("Y\nY\nY\n".getBytes()));
         timer.setTime(LocalDateTime.parse("2024-05-08T01:20:30"));
-        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(7560L);
+        List<FreeProductDTO> freeProducts = freeProductsChecker.createFreeProductDTOs(orders);
+        FooterDTO footerDTO = calculator.createFooterDTO(orders, freeProducts);
+        assertThat(footerDTO.getRawTotalPrice()).isEqualTo(24000);
+        assertThat(footerDTO.getPromotionDiscount()).isEqualTo(-4400);
+        assertThat(footerDTO.getMembershipDiscount()).isEqualTo(-3960);
+        assertThat(footerDTO.getPayment()).isEqualTo(15640);
 
-        timer.setTime(LocalDateTime.parse("2024-11-08T01:20:30"));
-        assertThat(calculator.askMembershipDiscount(orders)).isEqualTo(5760L);
     }
 }

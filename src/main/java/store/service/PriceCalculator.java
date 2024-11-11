@@ -1,11 +1,13 @@
 package store.service;
 
-import java.util.Map;
+import java.util.List;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.input.Order;
 import store.domain.input.Orders;
+import store.dto.receipt.FooterDTO;
+import store.dto.receipt.FreeProductDTO;
 import store.util.Retrier;
 import store.view.InputView;
 
@@ -29,22 +31,31 @@ public class PriceCalculator {
         this.retrier = retrier;
     }
 
-    public long getRawTotalPrice(Orders orders) {
+    public FooterDTO createFooterDTO(Orders orders, List<FreeProductDTO> freeProducts) {
+        long totalPrice = getRawTotalPrice(orders);
+        long promotionDiscount = getPromotionDiscount(freeProducts);
+        long membershipDiscount = askMembershipDiscount(orders);
+        return new FooterDTO(orders.getTotalQuantity(), totalPrice, promotionDiscount, membershipDiscount,
+                totalPrice + promotionDiscount + membershipDiscount);
+    }
+
+    private long getRawTotalPrice(Orders orders) {
         return orders.getAll().stream()
                 .mapToLong(order -> (long) order.getQuantity() * products.getPriceByName(order.getName()))
                 .sum();
     }
 
-    public long getPromotionDiscount(Map<String, Integer> freeProducts) {
-        return freeProducts.entrySet().stream()
-                .mapToLong(p -> products.getPriceByName(p.getKey()) * p.getValue()).sum();
+    private long getPromotionDiscount(List<FreeProductDTO> freeProducts) {
+        return freeProducts.stream()
+                .mapToLong(freeProduct -> freeProduct.getQuantity() * products.getPriceByName(freeProduct.getName()))
+                .sum() * -1;
     }
 
-    public long askMembershipDiscount(Orders orders) {
+    private long askMembershipDiscount(Orders orders) {
         if (retrier.tryUntilSuccess(inputView::isMembership)) {
             return (long) Math.min(
                     getMembershipCoveredTotalPrice(orders) * MEMBERSHIP_DISCOUNT_RATE,
-                    MAX_MEMBERSHIP_DISCOUNT);
+                    MAX_MEMBERSHIP_DISCOUNT) * -1;
         }
         return 0;
     }
